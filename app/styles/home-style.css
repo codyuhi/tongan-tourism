@@ -1,0 +1,55 @@
+#header-container,
+#testimonials-container {
+    background-color: #f3f3f3;
+    height: 600px;
+}
+
+#preview-container,
+#footer-container {
+    background-color: #fcfcfc;
+    height: 400px;
+}
+
+#preview-container,
+#testimonials-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+}
+
+#preview-container {
+    flex: 4;
+}
+
+#testimonials-container {
+    flex: 6;
+}
+
+/* Tablet View */
+@media only screen and (min-width: 401px) and (max-width: 1091px) {
+
+}
+
+
+/* Desktop View */
+@media only screen and (min-width: 1092px) {
+    #header-container,
+    #header {
+        text-align: start;
+        align-items: baseline;
+    }
+
+    #header {
+        margin-left: 14vw;
+    }
+
+    #header-text-container {
+        width: 45vw;
+    }
+
+    #header-text > p {
+        font-size: 28px;
+        margin: 15px 0 15px 0;
+    }
+}

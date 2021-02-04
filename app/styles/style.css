@@ -1,0 +1,141 @@
+* {
+    font-family: 'Roboto', sans-serif;
+}
+
+i.bx {
+    font-size: 1.5em;
+    color: white;
+}
+
+i.bx:hover {
+    color: darkgray;
+}
+
+button {
+    color: black !important;
+    background-color: #c4c4c4 !important;
+    border: none !important;
+}
+
+#page-container,
+#page,
+#content-container,
+#content,
+#footer-container,
+#footer {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.section {
+    padding: 15px 15px 15px 15px;
+    height: 600px;
+    width: 100vw;
+}
+
+.navbar {
+    background-color: #c4c4c4 !important;
+}
+
+#navbar-logo {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    background-color: white;
+    color: black;
+    text-align: center;
+    font-size: 15px;
+}
+
+#navbar-logo > p {
+    margin: 0;
+}
+
+.navbar-nav {
+    margin-left: 15vw;
+}
+
+.navbar-nav > a {
+    margin-right: 5vw;
+}
+
+#header-container,
+#header {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+#header-container {
+    margin-top: 55px;
+}
+
+#header-text-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80vw;
+}
+
+#header-text > h1 {
+    font-weight: bold;
+}
+
+#header-text > p {
+    margin: 35px 0 35px 0;
+    font-size: 18px;
+}
+
+#content-container.section {
+    padding: 0 15px 0 15px;
+    height: 1000px;
+}
+
+#content-container {
+    background-color: #c1c1c1;
+}
+
+#footer-container.section {
+    padding: 0 15px 0 15px;
+    height: 400px;
+}
+
+/* Tablet View */
+@media only screen and (min-width: 401px) and (max-width: 991px) {
+    #header-text-container {
+        width: 60vw;
+    }
+}
+
+
+/* Desktop View */
+@media only screen and (min-width: 992px) {
+    /* If these end up being used on other pages than the home page, uncomment this and remove from home-style */
+    /* #header-container,
+    #header {
+        text-align: start;
+        align-items: baseline;
+    }
+
+    #header {
+        margin-left: 14vw;
+    }
+
+    #header-text-container {
+        width: 45vw;
+    }
+
+    #header-text > p {
+        font-size: 28px;
+        margin: 15px 0 15px 0;
+    } */
+}
