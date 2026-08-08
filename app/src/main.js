@@ -4,7 +4,7 @@ import { soundEngine } from './utils/audio.js';
 // Application State
 const state = {
   currentView: 'discover',
-  theme: localStorage.getItem('tonga_theme') || 'light',
+  theme: localStorage.getItem('tonga_theme') || 'dark',
   savedItineraries: JSON.parse(localStorage.getItem('tonga_saved_trips') || '[]'),
   currentFilter: 'all',
   liveRates: TONGA_DATA.currency.defaultRates
@@ -167,7 +167,7 @@ function openIslandDetailModal(islandId) {
       <p style="color:var(--text-muted); font-size:1rem; line-height:1.6;">${island.description}</p>
     </div>
 
-    <div style="background:rgba(15,23,42,0.06); padding:1rem; border-radius:8px; margin-bottom:1.5rem; display:flex; gap:1rem; flex-wrap:wrap; border:1px solid var(--glass-border);">
+    <div style="background:rgba(255,255,255,0.05); padding:1rem; border-radius:8px; margin-bottom:1.5rem; display:flex; gap:1rem; flex-wrap:wrap; border:1px solid var(--glass-border);">
       <div><strong>Capital:</strong> ${island.capital}</div>
       <div><strong>Airport:</strong> ${island.airport}</div>
       <div><strong>Inter-Island Logistics:</strong> ${island.flightTimeFromCapital}</div>
@@ -201,7 +201,7 @@ function renderCulture() {
         <p class="island-card-desc">${item.summary}</p>
         
         ${item.etiquetteTips ? `
-          <div style="background:rgba(2, 132, 199, 0.08); border-left:3px solid var(--lagoon-turquoise); padding:0.75rem 1rem; border-radius:6px; margin:1rem 0;">
+          <div style="background:rgba(0, 229, 216, 0.08); border-left:3px solid var(--lagoon-turquoise); padding:0.75rem 1rem; border-radius:6px; margin:1rem 0;">
             <strong style="color:var(--lagoon-turquoise); font-size:0.85rem; display:block; margin-bottom:0.25rem;">PROPER ETIQUETTE:</strong>
             <ul style="padding-left:1rem; color:var(--text-muted); font-size:0.85rem;">
               ${item.etiquetteTips.map(tip => `<li>${tip}</li>`).join('')}
@@ -212,7 +212,7 @@ function renderCulture() {
         ${item.dishes ? `
           <div style="display:flex; flex-direction:column; gap:0.5rem; margin-top:1rem;">
             ${item.dishes.map(d => `
-              <div style="background:rgba(15,23,42,0.04); border:1px solid var(--glass-border); padding:0.6rem 0.8rem; border-radius:6px;">
+              <div style="background:rgba(255,255,255,0.05); border:1px solid var(--glass-border); padding:0.6rem 0.8rem; border-radius:6px;">
                 <span style="color:var(--gold-warm); font-weight:700;">🍽️ ${d.name}</span> — <span style="color:var(--text-muted); font-size:0.85rem;">${d.desc}</span>
               </div>
             `).join('')}
@@ -293,7 +293,7 @@ function generateItineraryPlan() {
     <div class="day-plan-card">
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <span style="font-weight:700; color:var(--lagoon-turquoise); font-size:0.9rem;">DAY ${day.day} • ${day.island.toUpperCase()}</span>
-        <span style="font-size:0.75rem; color:var(--text-muted); background:rgba(15,23,42,0.06); padding:0.2rem 0.5rem; border-radius:4px;">Scheduled</span>
+        <span style="font-size:0.75rem; color:var(--text-muted); background:rgba(255,255,255,0.08); padding:0.2rem 0.5rem; border-radius:4px;">Scheduled</span>
       </div>
       <h4 style="font-size:1.1rem; font-weight:700; margin:0.4rem 0 0.2rem;">${day.title}</h4>
       <p style="color:var(--text-muted); font-size:0.9rem; line-height:1.5;">${day.desc}</p>

@@ -46,7 +46,7 @@ tongan-tourism/
 1. **Frontend Core**: Vanilla HTML5, CSS3, and ES6+ JavaScript.
 2. **Bundler & Dev Server**: [Vite](https://vitejs.dev/) for fast dev serving and production bundling.
 3. **Design System**:
-   - Modern Glassmorphism layout with customizable light/dark themes (default: **Light Mode**).
+   - Modern Glassmorphism layout with customizable light/dark themes (default: **Dark Mode**).
    - High-contrast, accessible typography using Google Fonts (*Cinzel*, *Outfit*, *Plus Jakarta Sans*).
    - Top-layer dialog entry/exit animations using CSS `@starting-style`, `transition-behavior: allow-discrete`, and `overlay`.
    - Native View Transitions API for smooth view switches.
