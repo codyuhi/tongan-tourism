@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kingdom of Tonga | The Friendly Islands & Marine Sanctuary</title>
+  <title>Kingdom of Tonga | Travel Guide & Marine Sanctuary</title>
   <meta name="description" content="Discover the Kingdom of Tonga — experience swimming with humpback whales, pristine coral atolls, ancient Polynesian culture, blowholes, and tropical island adventures.">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👑</text></svg>">
   <link rel="stylesheet" href="/src/style.css">
@@ -32,11 +32,6 @@
     </nav>
 
     <div class="header-actions">
-      <!-- Ambient Ocean Waves Toggle -->
-      <button class="audio-toggle-btn" id="btn-ocean-toggle" title="Toggle Ambient Ocean Waves Sound">
-        🌊
-      </button>
-
       <!-- Saved Trips Badge -->
       <button class="badge-btn" id="btn-saved-trips">
         <span>✈️ Saved Trip</span>
@@ -44,14 +39,15 @@
       </button>
 
       <!-- Theme Switcher -->
-      <button class="audio-toggle-btn" id="btn-theme-toggle" title="Toggle Light/Dark Theme">
-        🌙
+      <button class="theme-toggle-btn" id="btn-theme-toggle" title="Toggle Light/Dark Theme">
+        ☀️
       </button>
     </div>
   </header>
 
-  <!-- View Section 1: Discover (Home) -->
+  <!-- Main Content Area -->
   <main id="main-content">
+    <!-- View Section 1: Discover (Home) -->
     <section id="discover-view" class="view-section active">
       <div class="hero-section">
         <div class="hero-bg-container">
@@ -72,15 +68,15 @@
             </button>
           </div>
 
-          <!-- Live Tonga Time & Weather Widget -->
+          <!-- Dynamic Tonga Clock & Live Weather Widget -->
           <div class="stats-bar">
             <div class="stat-box">
               <div class="stat-num" id="tonga-clock">14:00</div>
               <div class="stat-label">Local Time (UTC+13)</div>
             </div>
             <div class="stat-box">
-              <div class="stat-num">27°C / 81°F</div>
-              <div class="stat-label">Tropical Breeze</div>
+              <div class="stat-num" id="tonga-weather">27°C</div>
+              <div class="stat-label" id="tonga-weather-label">Nuku'alofa Live Weather</div>
             </div>
             <div class="stat-box">
               <div class="stat-num">171</div>
@@ -96,7 +92,6 @@
 
       <!-- Main Container Content -->
       <div class="main-container">
-        <!-- Quick Teaser Cards -->
         <div class="section-header">
           <span class="section-tag">Unforgettable Experiences</span>
           <h2 class="section-title">Why Tonga is Like Nowhere Else on Earth</h2>
@@ -154,39 +149,38 @@
           </div>
           
           <svg class="svg-map" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
-            <!-- Ocean background grid lines -->
-            <rect width="800" height="400" fill="rgba(7, 42, 74, 0.4)" rx="16"/>
-            <path d="M 0,100 Q 400,120 800,100 M 0,200 Q 400,220 800,200 M 0,300 Q 400,320 800,300" stroke="rgba(0, 229, 216, 0.08)" stroke-width="1" fill="none"/>
+            <rect width="800" height="400" fill="rgba(3, 105, 161, 0.1)" rx="16"/>
+            <path d="M 0,100 Q 400,120 800,100 M 0,200 Q 400,220 800,200 M 0,300 Q 400,320 800,300" stroke="rgba(2, 132, 199, 0.15)" stroke-width="1" fill="none"/>
             
             <!-- Vava'u Pin -->
             <g class="map-island-pin" data-island="vavau">
-              <circle cx="560" cy="110" r="16" fill="rgba(0, 229, 216, 0.2)" stroke="var(--lagoon-turquoise)" stroke-width="2"/>
+              <circle cx="560" cy="110" r="16" fill="rgba(2, 132, 199, 0.2)" stroke="var(--lagoon-turquoise)" stroke-width="2"/>
               <circle cx="560" cy="110" r="7" fill="var(--lagoon-turquoise)"/>
-              <text x="590" y="115" fill="#ffffff" font-weight="700" font-size="14">Vava'u Group</text>
+              <text x="590" y="115" fill="var(--text-main)" font-weight="700" font-size="14">Vava'u Group</text>
               <text x="590" y="132" fill="var(--text-muted)" font-size="11">Sailing & Whales</text>
             </g>
 
             <!-- Ha'apai Pin -->
             <g class="map-island-pin" data-island="haapai">
-              <circle cx="450" cy="200" r="16" fill="rgba(255, 186, 8, 0.2)" stroke="var(--gold-warm)" stroke-width="2"/>
+              <circle cx="450" cy="200" r="16" fill="rgba(180, 83, 9, 0.2)" stroke="var(--gold-warm)" stroke-width="2"/>
               <circle cx="450" cy="200" r="7" fill="var(--gold-warm)"/>
-              <text x="480" y="205" fill="#ffffff" font-weight="700" font-size="14">Ha'apai Group</text>
+              <text x="480" y="205" fill="var(--text-main)" font-weight="700" font-size="14">Ha'apai Group</text>
               <text x="480" y="222" fill="var(--text-muted)" font-size="11">Coral Atolls & Sandbars</text>
             </g>
 
             <!-- Tongatapu Pin -->
             <g class="map-island-pin" data-island="tongatapu">
-              <circle cx="320" cy="300" r="18" fill="rgba(230, 35, 60, 0.2)" stroke="var(--primary-royal)" stroke-width="2"/>
+              <circle cx="320" cy="300" r="18" fill="rgba(217, 30, 54, 0.2)" stroke="var(--primary-royal)" stroke-width="2"/>
               <circle cx="320" cy="300" r="8" fill="var(--primary-royal)"/>
-              <text x="350" y="305" fill="#ffffff" font-weight="700" font-size="14">Tongatapu (Capital)</text>
+              <text x="350" y="305" fill="var(--text-main)" font-weight="700" font-size="14">Tongatapu (Capital)</text>
               <text x="350" y="322" fill="var(--text-muted)" font-size="11">Royal Seat & Megaliths</text>
             </g>
 
             <!-- 'Eua Pin -->
             <g class="map-island-pin" data-island="eua">
-              <circle cx="380" cy="335" r="14" fill="rgba(0, 229, 216, 0.2)" stroke="var(--lagoon-turquoise)" stroke-width="2"/>
+              <circle cx="380" cy="335" r="14" fill="rgba(2, 132, 199, 0.2)" stroke="var(--lagoon-turquoise)" stroke-width="2"/>
               <circle cx="380" cy="335" r="6" fill="var(--lagoon-turquoise)"/>
-              <text x="405" y="340" fill="#ffffff" font-weight="700" font-size="13">'Eua Island</text>
+              <text x="405" y="340" fill="var(--text-main)" font-weight="700" font-size="13">'Eua Island</text>
               <text x="405" y="355" fill="var(--text-muted)" font-size="11">Ancient Rainforest Treks</text>
             </g>
           </svg>
@@ -229,11 +223,11 @@
         <div class="whale-hero">
           <img src="/images/whales.jpg" alt="Whale Sanctuary Tonga" class="whale-hero-bg">
           <div class="whale-hero-content">
-            <span class="section-tag" style="color:var(--lagoon-turquoise);">SANCTUARY OF THE PACIFIC</span>
-            <h2 style="font-size:2.5rem; font-weight:800; margin-bottom:0.5rem;">Swim with Migrating Humpbacks</h2>
-            <p style="color:#e2e8f0; font-size:1.05rem;">Tonga is one of only three places on Earth where humans can legally swim alongside wild humpback whales in protected waters.</p>
+            <span class="section-tag" style="color:#ffffff;">SANCTUARY OF THE PACIFIC</span>
+            <h2 style="font-size:2.5rem; font-weight:800; margin-bottom:0.5rem; color:#ffffff;">Swim with Migrating Humpbacks</h2>
+            <p style="color:#f1f5f9; font-size:1.05rem;">Tonga is one of only three places on Earth where humans can legally swim alongside wild humpback whales in protected waters.</p>
             <button class="btn-primary" id="btn-play-whale-synth" style="margin-top:1.25rem;">
-              🔊 Listen to Humpback Whale Call
+              🔊 Listen to Humpback Whale Call Soundscape
             </button>
           </div>
         </div>
@@ -319,7 +313,7 @@
             </div>
 
             <button class="btn-primary" id="btn-generate-plan" style="width:100%; justify-content:center; margin-top:1rem;">
-              ✨ Generate Custom Itinerary
+              Generate Custom Itinerary
             </button>
           </div>
 
@@ -346,13 +340,16 @@
         <div class="section-header">
           <span class="section-tag">Practical Guide</span>
           <h2 class="section-title">Travel Essentials & Local Knowledge</h2>
-          <p class="section-desc">Key details on visa entry, Tongan Pa'anga currency exchange rates, Sunday sacred customs, and essential Faka-Tonga language phrases with speech audio.</p>
+          <p class="section-desc">Key details on visa entry, Tongan Pa'anga currency exchange rates, Sunday sacred customs, and essential Faka-Tonga language phrases with phonetic pronunciations.</p>
         </div>
 
         <div class="builder-grid">
           <!-- Currency Converter & Budget Tool -->
           <div class="glass-panel" style="padding:2rem;">
-            <h3 class="font-royal" style="color:var(--gold-warm); margin-bottom:1.25rem;">💵 Currency & Budget Converter</h3>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;">
+              <h3 class="font-royal" style="color:var(--gold-warm);">💵 Currency & Budget Converter</h3>
+              <span id="live-rate-badge" style="font-size:0.75rem; background:rgba(2, 132, 199, 0.1); color:var(--lagoon-turquoise); padding:0.25rem 0.6rem; border-radius:12px; font-weight:600;">Updating live rates...</span>
+            </div>
             
             <div class="form-group">
               <label class="form-label">Amount in Tongan Pa'anga (TOP / $T)</label>
@@ -371,10 +368,10 @@
             </div>
           </div>
 
-          <!-- Audio Language Phrasebook -->
+          <!-- Written Pronunciation Phrasebook -->
           <div class="glass-panel" style="padding:2rem;">
-            <h3 class="font-royal" style="color:var(--lagoon-turquoise); margin-bottom:1.25rem;">🗣️ Faka-Tonga Phrasebook with Audio</h3>
-            <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1.5rem;">Click any audio button to hear the correct pronunciation of essential greetings.</p>
+            <h3 class="font-royal" style="color:var(--lagoon-turquoise); margin-bottom:1.25rem;">🗣️ Faka-Tonga Phrasebook & Pronunciation Guide</h3>
+            <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1.5rem;">Essential greetings and vocabulary with phonetic pronunciation guides.</p>
 
             <div id="phrasebook-list" style="display:flex; flex-direction:column; gap:0.75rem;">
               <!-- Populated by JS -->
@@ -435,7 +432,7 @@
       <div class="footer-col">
         <h4>Kingdom of Tonga</h4>
         <p style="color:var(--text-muted); font-size:0.9rem; line-height:1.6;">
-          Official Tourism Portal for the Kingdom of Tonga. Dedicated to showcasing the marine biodiversity, cultural heritage, and warm hospitality of Polynesia.
+          A travel and tourism guide showcasing the culture, marine biodiversity, and islands of Tonga.
         </p>
       </div>
       <div class="footer-col">
@@ -467,8 +464,7 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <div>© 2026 Kingdom of Tonga Tourism. All rights reserved.</div>
-      <div>Designed with modern web standards & Polynesian craftsmanship.</div>
+      <div>© 2026 Cody Uhi. All rights reserved.</div>
     </div>
   </footer>
 

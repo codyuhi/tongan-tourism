@@ -243,20 +243,20 @@ export const TONGA_DATA = {
   },
 
   phrases: [
-    { tongan: "Mālō e lelei", english: "Hello / Good day", usage: "Universal greeting", audioKey: "malo_e_lelei" },
-    { tongan: "Mālō 'aupito", english: "Thank you very much", usage: "Polite gratitude", audioKey: "malo_aupito" },
-    { tongan: "'Ofa atu", english: "With love / Warm regards", usage: "Farewell or sign-off", audioKey: "ofa_atu" },
-    { tongan: "Fēfe hake?", english: "How are you?", usage: "Casual check-in", audioKey: "fefe_hake" },
-    { tongan: "Sai pē", english: "I am fine / All good", usage: "Response to Fēfe hake", audioKey: "sai_pe" },
-    { tongan: "Tāufaka'ofa", english: "Beautiful / Magnificent", usage: "Praising sights & music", audioKey: "taufakao fa" },
-    { tongan: "Nofo ā", english: "Goodbye (to one staying)", usage: "Leaving someone", audioKey: "nofo_a" },
-    { tongan: "'Alu ā", english: "Goodbye (to one leaving)", usage: "Said by host to guest", audioKey: "alu_a" }
+    { tongan: "Mālō e lelei", english: "Hello / Good day", usage: "Universal greeting", pronunciation: "mah-LOH eh leh-LEH-ee" },
+    { tongan: "Mālō 'aupito", english: "Thank you very much", usage: "Polite gratitude", pronunciation: "mah-LOH ow-PEE-toh" },
+    { tongan: "'Ofa atu", english: "With love / Warm regards", usage: "Farewell or sign-off", pronunciation: "oh-FAH ah-TOO" },
+    { tongan: "Fēfe hake?", english: "How are you?", usage: "Casual check-in", pronunciation: "FEH-feh HAH-keh" },
+    { tongan: "Sai pē", english: "I am fine / All good", usage: "Response to Fēfe hake", pronunciation: "SAY peh" },
+    { tongan: "Tāufaka'ofa", english: "Beautiful / Magnificent", usage: "Praising sights & music", pronunciation: "tow-fah-kah-OH-fah" },
+    { tongan: "Nofo ā", english: "Goodbye (to one staying)", usage: "Leaving someone", pronunciation: "NOH-foh ah" },
+    { tongan: "'Alu ā", english: "Goodbye (to one leaving)", usage: "Said by host to guest", pronunciation: "AH-loo ah" }
   ],
 
   currency: {
     baseCurrency: "TOP",
     symbol: "$T",
-    rates: {
+    defaultRates: {
       USD: 0.42,
       AUD: 0.64,
       NZD: 0.70,
@@ -291,21 +291,6 @@ export const TONGA_DATA = {
         { day: 5, island: "Vava'u", title: "Caves & Island Catamaran", desc: "Explore Swallow's Cave by kayak or boat, snorkel Port of Refuge coral gardens." },
         { day: 6, island: "Tongatapu", title: "Return & Traditional Faikava", desc: "Fly back to Tongatapu, attend an evening cultural show & Faikava ceremony with 'Ota Ika feast." },
         { day: 7, island: "Tongatapu", title: "Souvenirs & Departure", desc: "Shop for hand-carved bone pendants and fine mats, departure from Fua'amotu Airport." }
-      ]
-    },
-    {
-      id: "eco-adventure-6day",
-      title: "'Eua Rainforest & Ha'apai Solitude",
-      duration: "6 Days",
-      vibe: "Adventure & Hiking",
-      islands: ["'Eua", "Ha'apai"],
-      days: [
-        { day: 1, island: "'Eua", title: "Arrival in Ancient Rainforest", desc: "Fly or ferry to 'Eua, check into eco-lodge, sunset walk to Lokupo cliff outlook." },
-        { day: 2, island: "'Eua", title: "National Park & Cave Descent", desc: "Guided hike through ancient strangler fig groves to Fangatave beach caves." },
-        { day: 3, island: "Ha'apai", title: "Transfer to Uninhabited Atolls", desc: "Flight connection to Pangai, Ha'apai. Settle into beachfront fale." },
-        { day: 4, island: "Ha'apai", title: "Unspoiled Coral Reef Diving", desc: "Dive untouched submerged pinnacles and spot sea turtles in crystal clear waters." },
-        { day: 5, island: "Ha'apai", title: "Sandbar Picnic & Kitesurfing", desc: "Boat drop-off at an uninhabited sandbar for a private beach picnic." },
-        { day: 6, island: "Tongatapu", title: "Return to Main Hub", desc: "Fly back to Tongatapu for final connection home." }
       ]
     }
   ]

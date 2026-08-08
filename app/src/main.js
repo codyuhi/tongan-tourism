@@ -4,29 +4,26 @@ import { soundEngine } from './utils/audio.js';
 // Application State
 const state = {
   currentView: 'discover',
-  theme: localStorage.getItem('tonga_theme') || 'dark',
+  theme: localStorage.getItem('tonga_theme') || 'light',
   savedItineraries: JSON.parse(localStorage.getItem('tonga_saved_trips') || '[]'),
   currentFilter: 'all',
-  isOceanAudioOn: false
+  liveRates: TONGA_DATA.currency.defaultRates
 };
 
-// View Transition Helper (Using Modern Web Guidance pattern)
+// View Transition Helper
 function navigateToView(viewId) {
   if (state.currentView === viewId) return;
 
   const updateDOM = () => {
-    // Hide all view sections
     document.querySelectorAll('.view-section').forEach(sec => {
       sec.classList.remove('active');
     });
 
-    // Activate target section
     const targetSection = document.getElementById(`${viewId}-view`);
     if (targetSection) {
       targetSection.classList.add('active');
     }
 
-    // Update active nav button
     document.querySelectorAll('.nav-item button').forEach(btn => {
       if (btn.dataset.view === viewId) {
         btn.classList.add('active');
@@ -39,7 +36,6 @@ function navigateToView(viewId) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Feature detect View Transitions API
   if (!document.startViewTransition) {
     updateDOM();
     return;
@@ -55,7 +51,6 @@ function initTongaClock() {
 
   function updateClock() {
     const now = new Date();
-    // Convert to UTC+13 time
     const utcMs = now.getTime() + (now.getTimezoneOffset() * 60000);
     const tongaTime = new Date(utcMs + (13 * 3600000));
     
@@ -66,6 +61,58 @@ function initTongaClock() {
 
   updateClock();
   setInterval(updateClock, 1000);
+}
+
+// Live Dynamic Weather Fetcher for Nuku'alofa, Tonga (-21.1789, -175.1982)
+async function fetchLiveTongaWeather() {
+  const weatherNumEl = document.getElementById('tonga-weather');
+  const weatherLabelEl = document.getElementById('tonga-weather-label');
+  if (!weatherNumEl) return;
+
+  try {
+    const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=-21.1789&longitude=-175.1982&current_weather=true');
+    if (response.ok) {
+      const data = await response.json();
+      if (data && data.current_weather) {
+        const tempC = Math.round(data.current_weather.temperature);
+        const tempF = Math.round((tempC * 9/5) + 32);
+        const windSpeed = data.current_weather.windspeed;
+        
+        weatherNumEl.textContent = `${tempC}°C / ${tempF}°F`;
+        if (weatherLabelEl) {
+          weatherLabelEl.textContent = `Nuku'alofa Live (${windSpeed} km/h wind)`;
+        }
+      }
+    }
+  } catch (err) {
+    console.warn('Weather API offline, using fallback estimates', err);
+    weatherNumEl.textContent = '27°C / 81°F';
+  }
+}
+
+// Live Dynamic Currency Rates Fetcher (TOP Base Currency)
+async function fetchLiveCurrencyRates() {
+  const badgeEl = document.getElementById('live-rate-badge');
+  try {
+    const response = await fetch('https://open.er-api.com/v6/latest/TOP');
+    if (response.ok) {
+      const data = await response.json();
+      if (data && data.rates) {
+        state.liveRates = {
+          USD: parseFloat(data.rates.USD?.toFixed(4) || 0.42),
+          AUD: parseFloat(data.rates.AUD?.toFixed(4) || 0.64),
+          NZD: parseFloat(data.rates.NZD?.toFixed(4) || 0.70),
+          EUR: parseFloat(data.rates.EUR?.toFixed(4) || 0.39),
+          GBP: parseFloat(data.rates.GBP?.toFixed(4) || 0.33)
+        };
+        if (badgeEl) badgeEl.textContent = '🟢 Live Exchange Rates';
+        updateCurrencyDisplay();
+      }
+    }
+  } catch (err) {
+    console.warn('Currency API unavailable, using standard rates', err);
+    if (badgeEl) badgeEl.textContent = 'Standard Bank Rates';
+  }
 }
 
 // Render Islands View
@@ -99,7 +146,6 @@ function renderIslands(filter = 'all') {
     </div>
   `).join('');
 
-  // Bind click listener for detail buttons
   container.querySelectorAll('.btn-detail-island').forEach(btn => {
     btn.addEventListener('click', () => openIslandDetailModal(btn.dataset.id));
   });
@@ -121,7 +167,7 @@ function openIslandDetailModal(islandId) {
       <p style="color:var(--text-muted); font-size:1rem; line-height:1.6;">${island.description}</p>
     </div>
 
-    <div style="background:rgba(255,255,255,0.05); padding:1rem; border-radius:8px; margin-bottom:1.5rem; display:flex; gap:1rem; flex-wrap:wrap;">
+    <div style="background:rgba(15,23,42,0.06); padding:1rem; border-radius:8px; margin-bottom:1.5rem; display:flex; gap:1rem; flex-wrap:wrap; border:1px solid var(--glass-border);">
       <div><strong>Capital:</strong> ${island.capital}</div>
       <div><strong>Airport:</strong> ${island.airport}</div>
       <div><strong>Inter-Island Logistics:</strong> ${island.flightTimeFromCapital}</div>
@@ -130,7 +176,7 @@ function openIslandDetailModal(islandId) {
     <h4 class="font-royal" style="color:var(--lagoon-turquoise); margin-bottom:1rem;">Top Attractions & Hidden Gems</h4>
     <div style="display:flex; flex-direction:column; gap:1rem;">
       ${island.highlights.map(h => `
-        <div style="background:rgba(5, 13, 24, 0.6); border:1px solid var(--glass-border); padding:1rem; border-radius:8px;">
+        <div style="background:var(--bg-surface-solid); border:1px solid var(--glass-border); padding:1rem; border-radius:8px;">
           <h5 style="color:var(--gold-warm); font-size:1.05rem; font-weight:700;">📍 ${h.title}</h5>
           <p style="color:var(--text-muted); font-size:0.9rem; margin-top:0.35rem;">${h.desc}</p>
         </div>
@@ -155,7 +201,7 @@ function renderCulture() {
         <p class="island-card-desc">${item.summary}</p>
         
         ${item.etiquetteTips ? `
-          <div style="background:rgba(0, 229, 216, 0.08); border-left:3px solid var(--lagoon-turquoise); padding:0.75rem 1rem; border-radius:6px; margin:1rem 0;">
+          <div style="background:rgba(2, 132, 199, 0.08); border-left:3px solid var(--lagoon-turquoise); padding:0.75rem 1rem; border-radius:6px; margin:1rem 0;">
             <strong style="color:var(--lagoon-turquoise); font-size:0.85rem; display:block; margin-bottom:0.25rem;">PROPER ETIQUETTE:</strong>
             <ul style="padding-left:1rem; color:var(--text-muted); font-size:0.85rem;">
               ${item.etiquetteTips.map(tip => `<li>${tip}</li>`).join('')}
@@ -166,7 +212,7 @@ function renderCulture() {
         ${item.dishes ? `
           <div style="display:flex; flex-direction:column; gap:0.5rem; margin-top:1rem;">
             ${item.dishes.map(d => `
-              <div style="background:rgba(255,255,255,0.05); padding:0.6rem 0.8rem; border-radius:6px;">
+              <div style="background:rgba(15,23,42,0.04); border:1px solid var(--glass-border); padding:0.6rem 0.8rem; border-radius:6px;">
                 <span style="color:var(--gold-warm); font-weight:700;">🍽️ ${d.name}</span> — <span style="color:var(--text-muted); font-size:0.85rem;">${d.desc}</span>
               </div>
             `).join('')}
@@ -205,7 +251,7 @@ function renderWhales() {
   }
 }
 
-// Dynamic Itinerary Plan Generator
+// Itinerary Plan Generator (Client-side JS logic)
 function generateItineraryPlan() {
   const duration = parseInt(document.getElementById('plan-duration').value, 10);
   const vibe = document.getElementById('plan-vibe').value;
@@ -221,7 +267,7 @@ function generateItineraryPlan() {
     const assignedIsland = selectedIslands[(d - 1) % selectedIslands.length] || 'Tongatapu';
     
     let title = `Exploring ${assignedIsland}`;
-    let desc = `Discover the pristine highlights, local cuisine, and coastal vistas of ${assignedIsland}.`;
+    let desc = `Discover the highlights, local cuisine, and coastal vistas of ${assignedIsland}.`;
 
     if (d === 1) {
       title = `Arrival in Tongatapu & Capital Warmup`;
@@ -247,14 +293,13 @@ function generateItineraryPlan() {
     <div class="day-plan-card">
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <span style="font-weight:700; color:var(--lagoon-turquoise); font-size:0.9rem;">DAY ${day.day} • ${day.island.toUpperCase()}</span>
-        <span style="font-size:0.75rem; color:var(--text-muted); background:rgba(255,255,255,0.08); padding:0.2rem 0.5rem; border-radius:4px;">Scheduled</span>
+        <span style="font-size:0.75rem; color:var(--text-muted); background:rgba(15,23,42,0.06); padding:0.2rem 0.5rem; border-radius:4px;">Scheduled</span>
       </div>
       <h4 style="font-size:1.1rem; font-weight:700; margin:0.4rem 0 0.2rem;">${day.title}</h4>
       <p style="color:var(--text-muted); font-size:0.9rem; line-height:1.5;">${day.desc}</p>
     </div>
   `).join('');
 
-  // Store transient generated plan
   state.currentPlan = { id: `plan-${Date.now()}`, duration, vibe, islands: selectedIslands, days };
 }
 
@@ -271,7 +316,7 @@ function saveCurrentPlan() {
 
   localStorage.setItem('tonga_saved_trips', JSON.stringify(state.savedItineraries));
   updateSavedTripBadge();
-  alert('✨ Itinerary saved! Click "Saved Trip" in the top bar anytime to view your plans.');
+  alert('✨ Itinerary saved! Click "Saved Trip" in the top bar anytime to view your saved plans.');
 }
 
 // Update Badge Count
@@ -300,7 +345,7 @@ function openSavedTripsModal() {
     });
   } else {
     body.innerHTML = state.savedItineraries.map((plan, idx) => `
-      <div style="background:rgba(5, 13, 24, 0.6); border:1px solid var(--glass-border); padding:1.25rem; border-radius:12px; margin-bottom:1rem;">
+      <div style="background:var(--bg-surface-solid); border:1px solid var(--glass-border); padding:1.25rem; border-radius:12px; margin-bottom:1rem;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
           <h4 class="font-royal" style="color:var(--lagoon-turquoise);">${plan.duration}-Day ${plan.vibe}</h4>
           <button class="btn-delete-plan" data-idx="${idx}" style="background:none; border:none; color:var(--primary-royal); cursor:pointer; font-weight:700;">Delete</button>
@@ -322,7 +367,7 @@ function openSavedTripsModal() {
         state.savedItineraries.splice(idx, 1);
         localStorage.setItem('tonga_saved_trips', JSON.stringify(state.savedItineraries));
         updateSavedTripBadge();
-        openSavedTripsModal(); // re-render modal
+        openSavedTripsModal();
       });
     });
   }
@@ -330,36 +375,36 @@ function openSavedTripsModal() {
   modal.showModal();
 }
 
-// Render Travel Essentials (Currency, Phrasebook, Visa)
-function renderEssentials() {
+// Update Currency Display
+function updateCurrencyDisplay() {
   const currencyGrid = document.getElementById('currency-output-grid');
+  const topInput = document.getElementById('curr-input-top');
+  if (!currencyGrid || !topInput) return;
+
+  const val = parseFloat(topInput.value) || 0;
+  currencyGrid.innerHTML = Object.entries(state.liveRates).map(([curr, rate]) => `
+    <div style="background:var(--bg-surface-solid); padding:0.75rem 1rem; border-radius:8px; border:1px solid var(--glass-border); box-shadow:var(--shadow-sm);">
+      <span style="font-size:0.75rem; color:var(--text-muted); display:block; font-weight:600;">${curr} Equivalent</span>
+      <span style="font-size:1.25rem; font-weight:700; color:var(--lagoon-turquoise);">${(val * rate).toFixed(2)} ${curr}</span>
+    </div>
+  `).join('');
+}
+
+// Render Travel Essentials (Currency, Written Phrasebook, Visa)
+function renderEssentials() {
   const budgetContainer = document.getElementById('budget-tiers-container');
   const phrasebookContainer = document.getElementById('phrasebook-list');
   const visaContainer = document.getElementById('visa-info-list');
-
-  // Currency Converter Output
   const topInput = document.getElementById('curr-input-top');
-  function updateCurrency() {
-    const val = parseFloat(topInput.value) || 0;
-    if (currencyGrid) {
-      currencyGrid.innerHTML = Object.entries(TONGA_DATA.currency.rates).map(([curr, rate]) => `
-        <div style="background:rgba(5,13,24,0.6); padding:0.75rem 1rem; border-radius:8px; border:1px solid var(--glass-border);">
-          <span style="font-size:0.75rem; color:var(--text-muted); display:block;">${curr} Equivalent</span>
-          <span style="font-size:1.25rem; font-weight:700; color:var(--lagoon-turquoise);">${(val * rate).toFixed(2)} ${curr}</span>
-        </div>
-      `).join('');
-    }
-  }
 
   if (topInput) {
-    topInput.addEventListener('input', updateCurrency);
-    updateCurrency();
+    topInput.addEventListener('input', updateCurrencyDisplay);
+    updateCurrencyDisplay();
   }
 
-  // Budget Tiers
   if (budgetContainer) {
     budgetContainer.innerHTML = Object.values(TONGA_DATA.currency.budgets).map(b => `
-      <div style="background:rgba(255,255,255,0.05); padding:0.9rem 1rem; border-radius:8px;">
+      <div style="background:var(--bg-surface-solid); border:1px solid var(--glass-border); padding:0.9rem 1rem; border-radius:8px;">
         <div style="display:flex; justify-content:space-between; font-weight:700; margin-bottom:0.2rem;">
           <span>${b.label}</span>
           <span style="color:var(--gold-warm);">$T ${b.costTOP} TOP / day</span>
@@ -369,29 +414,24 @@ function renderEssentials() {
     `).join('');
   }
 
-  // Phrasebook with Audio Speech Buttons
+  // Written Pronunciation Phrasebook
   if (phrasebookContainer) {
     phrasebookContainer.innerHTML = TONGA_DATA.phrases.map(p => `
-      <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(5,13,24,0.6); border:1px solid var(--glass-border); padding:0.8rem 1rem; border-radius:8px;">
-        <div>
-          <div style="font-weight:700; color:var(--lagoon-turquoise); font-size:1.05rem;">"${p.tongan}"</div>
-          <div style="color:var(--text-muted); font-size:0.85rem;">${p.english} • <em>${p.usage}</em></div>
+      <div style="background:var(--bg-surface-solid); border:1px solid var(--glass-border); padding:0.9rem 1.1rem; border-radius:8px; box-shadow:var(--shadow-sm);">
+        <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:0.25rem;">
+          <span style="font-weight:800; color:var(--lagoon-turquoise); font-size:1.1rem;">"${p.tongan}"</span>
+          <span style="font-size:0.85rem; font-weight:600; color:var(--gold-warm);">${p.english}</span>
         </div>
-        <button class="btn-secondary btn-audio-phrase" data-phrase="${p.tongan}" style="padding:0.4rem 0.8rem; font-size:0.8rem;">
-          🔊 Listen
-        </button>
+        <div style="color:var(--text-muted); font-size:0.85rem;">
+          🗣️ Pronounced: <em>"${p.pronunciation}"</em> • <span style="color:var(--text-dim);">${p.usage}</span>
+        </div>
       </div>
     `).join('');
-
-    phrasebookContainer.querySelectorAll('.btn-audio-phrase').forEach(btn => {
-      btn.addEventListener('click', () => soundEngine.speakPhrase(btn.dataset.phrase));
-    });
   }
 
-  // Visa Info
   if (visaContainer) {
     visaContainer.innerHTML = TONGA_DATA.visaInfo.map(v => `
-      <div style="background:rgba(255,255,255,0.05); padding:1rem; border-radius:8px;">
+      <div style="background:var(--bg-surface-solid); border:1px solid var(--glass-border); padding:1rem; border-radius:8px;">
         <h5 style="color:var(--gold-warm); font-weight:700; margin-bottom:0.25rem;">${v.region}</h5>
         <div style="color:var(--text-main); font-weight:600; font-size:0.9rem; margin-bottom:0.25rem;">${v.rule}</div>
         <p style="color:var(--text-muted); font-size:0.85rem; margin:0;">Requirements: ${v.requirements}</p>
@@ -402,7 +442,11 @@ function renderEssentials() {
 
 // Setup Event Listeners & Initialization
 function initApp() {
+  document.documentElement.setAttribute('data-theme', state.theme);
+
   initTongaClock();
+  fetchLiveTongaWeather();
+  fetchLiveCurrencyRates();
 
   // Initial renders
   renderIslands('all');
@@ -414,7 +458,7 @@ function initApp() {
 
   // Navigation Button Handlers
   document.querySelectorAll('[data-view]').forEach(el => {
-    el.addEventListener('click', (e) => {
+    el.addEventListener('click', () => {
       const view = el.dataset.view;
       if (view) navigateToView(view);
     });
@@ -443,7 +487,6 @@ function initApp() {
       const islandId = pin.dataset.island;
       navigateToView('islands');
       
-      // Update filter bar
       document.querySelectorAll('#island-filter-bar .filter-btn').forEach(b => {
         b.classList.toggle('active', b.dataset.filter === islandId);
       });
@@ -451,14 +494,7 @@ function initApp() {
     });
   });
 
-  // Ambient Ocean Sound Toggle
-  const oceanBtn = document.getElementById('btn-ocean-toggle');
-  oceanBtn?.addEventListener('click', () => {
-    state.isOceanAudioOn = soundEngine.toggleOceanWaves(!state.isOceanAudioOn);
-    oceanBtn.classList.toggle('active', state.isOceanAudioOn);
-  });
-
-  // Whale Synth Audio Trigger
+  // Whale Synth Soundscape Trigger
   document.getElementById('btn-play-whale-synth')?.addEventListener('click', () => {
     soundEngine.playWhaleSong();
   });
@@ -478,13 +514,15 @@ function initApp() {
 
   // Theme Switcher Toggle
   const themeBtn = document.getElementById('btn-theme-toggle');
-  themeBtn?.addEventListener('click', () => {
-    state.theme = state.theme === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', state.theme);
-    localStorage.setItem('tonga_theme', state.theme);
+  if (themeBtn) {
     themeBtn.textContent = state.theme === 'dark' ? '🌙' : '☀️';
-  });
+    themeBtn.addEventListener('click', () => {
+      state.theme = state.theme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', state.theme);
+      localStorage.setItem('tonga_theme', state.theme);
+      themeBtn.textContent = state.theme === 'dark' ? '🌙' : '☀️';
+    });
+  }
 }
 
-// Launch application on DOM ready
 document.addEventListener('DOMContentLoaded', initApp);
