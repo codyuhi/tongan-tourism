@@ -2,7 +2,11 @@
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0a192f">
   <title>Kingdom of Tonga | Travel Guide & Marine Sanctuary</title>
   <meta name="description" content="Discover the Kingdom of Tonga — experience swimming with humpback whales, pristine coral atolls, ancient Polynesian culture, blowholes, and tropical island adventures.">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👑</text></svg>">
@@ -42,8 +46,44 @@
       <button class="theme-toggle-btn" id="btn-theme-toggle" title="Toggle Light/Dark Theme">
         🌙
       </button>
+
+      <!-- Mobile Hamburger Button -->
+      <button class="hamburger-btn" id="btn-mobile-menu" aria-label="Toggle navigation menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
     </div>
   </header>
+
+  <!-- Mobile Navigation Drawer -->
+  <div class="mobile-drawer-backdrop" id="mobile-drawer-backdrop"></div>
+  <aside class="mobile-drawer" id="mobile-drawer" aria-label="Mobile Navigation">
+    <div class="mobile-drawer-header">
+      <div class="brand-logo">
+        <div class="brand-crown-icon">👑</div>
+        <div>
+          <div class="brand-title">Kingdom of Tonga</div>
+          <div class="brand-sub">South Pacific Realm</div>
+        </div>
+      </div>
+      <button class="mobile-drawer-close" id="btn-mobile-drawer-close" aria-label="Close menu">✕</button>
+    </div>
+    <ul class="mobile-drawer-links">
+      <li><button data-view="discover" class="mobile-drawer-btn active">🌴 Discover</button></li>
+      <li><button data-view="islands" class="mobile-drawer-btn">🏝️ Islands Explorer</button></li>
+      <li><button data-view="culture" class="mobile-drawer-btn">🌺 Culture & Kava</button></li>
+      <li><button data-view="whales" class="mobile-drawer-btn">🐋 Whale Sanctuary</button></li>
+      <li><button data-view="planner" class="mobile-drawer-btn">🗺️ Itinerary Planner</button></li>
+      <li><button data-view="essentials" class="mobile-drawer-btn">🧭 Travel Essentials</button></li>
+    </ul>
+    <div class="mobile-drawer-footer">
+      <button class="badge-btn mobile-trip-btn" id="btn-saved-trips-mobile">
+        <span>✈️ Saved Itinerary</span>
+        <span class="badge-count" id="saved-trip-count-mobile">0</span>
+      </button>
+    </div>
+  </aside>
 
   <!-- Main Content Area -->
   <main id="main-content">
@@ -467,6 +507,30 @@
       <div>© 2026 Cody Uhi. All rights reserved.</div>
     </div>
   </footer>
+
+  <!-- Mobile Bottom Navigation Bar -->
+  <nav class="mobile-bottom-nav" aria-label="Quick mobile navigation">
+    <button data-view="discover" class="bottom-nav-btn active" title="Discover">
+      <span class="nav-icon">🌴</span>
+      <span class="nav-text">Discover</span>
+    </button>
+    <button data-view="islands" class="bottom-nav-btn" title="Islands">
+      <span class="nav-icon">🏝️</span>
+      <span class="nav-text">Islands</span>
+    </button>
+    <button data-view="whales" class="bottom-nav-btn" title="Whales">
+      <span class="nav-icon">🐋</span>
+      <span class="nav-text">Whales</span>
+    </button>
+    <button data-view="planner" class="bottom-nav-btn" title="Planner">
+      <span class="nav-icon">🗺️</span>
+      <span class="nav-text">Planner</span>
+    </button>
+    <button type="button" id="btn-mobile-more" class="bottom-nav-btn" title="More options">
+      <span class="nav-icon">☰</span>
+      <span class="nav-text">More</span>
+    </button>
+  </nav>
 
   <script type="module" src="/src/main.js"></script>
 </body>

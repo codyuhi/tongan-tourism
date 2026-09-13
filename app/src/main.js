@@ -25,12 +25,23 @@ function navigateToView(viewId) {
     }
 
     document.querySelectorAll('.nav-item button').forEach(btn => {
-      if (btn.dataset.view === viewId) {
-        btn.classList.add('active');
-      } else {
-        btn.classList.remove('active');
-      }
+      btn.classList.toggle('active', btn.dataset.view === viewId);
     });
+
+    document.querySelectorAll('.mobile-drawer-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.view === viewId);
+    });
+
+    document.querySelectorAll('.bottom-nav-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.view === viewId);
+    });
+
+    const drawer = document.getElementById('mobile-drawer');
+    const backdrop = document.getElementById('mobile-drawer-backdrop');
+    if (drawer && drawer.classList.contains('open')) {
+      drawer.classList.remove('open');
+      backdrop?.classList.remove('open');
+    }
 
     state.currentView = viewId;
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -321,9 +332,14 @@ function saveCurrentPlan() {
 
 // Update Badge Count
 function updateSavedTripBadge() {
+  const count = state.savedItineraries.length;
   const badgeCount = document.getElementById('saved-trip-count');
   if (badgeCount) {
-    badgeCount.textContent = state.savedItineraries.length;
+    badgeCount.textContent = count;
+  }
+  const badgeCountMobile = document.getElementById('saved-trip-count-mobile');
+  if (badgeCountMobile) {
+    badgeCountMobile.textContent = count;
   }
 }
 
@@ -503,6 +519,27 @@ function initApp() {
   document.getElementById('btn-generate-plan')?.addEventListener('click', generateItineraryPlan);
   document.getElementById('btn-save-current-plan')?.addEventListener('click', saveCurrentPlan);
   document.getElementById('btn-saved-trips')?.addEventListener('click', openSavedTripsModal);
+
+  // Mobile Navigation Drawer Toggle Handlers
+  const mobileDrawer = document.getElementById('mobile-drawer');
+  const mobileBackdrop = document.getElementById('mobile-drawer-backdrop');
+  const openMobileDrawer = () => {
+    mobileDrawer?.classList.add('open');
+    mobileBackdrop?.classList.add('open');
+  };
+  const closeMobileDrawer = () => {
+    mobileDrawer?.classList.remove('open');
+    mobileBackdrop?.classList.remove('open');
+  };
+
+  document.getElementById('btn-mobile-menu')?.addEventListener('click', openMobileDrawer);
+  document.getElementById('btn-mobile-more')?.addEventListener('click', openMobileDrawer);
+  document.getElementById('btn-mobile-drawer-close')?.addEventListener('click', closeMobileDrawer);
+  mobileBackdrop?.addEventListener('click', closeMobileDrawer);
+  document.getElementById('btn-saved-trips-mobile')?.addEventListener('click', () => {
+    closeMobileDrawer();
+    openSavedTripsModal();
+  });
 
   // Modal Closers
   document.getElementById('btn-close-modal')?.addEventListener('click', () => {
