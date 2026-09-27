@@ -1,15 +1,28 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="mobile-web-app-capable" content="yes">
-  <meta name="theme-color" content="#0a192f">
+  <meta name="theme-color" content="#161614">
   <title>Kingdom of Tonga | Travel Guide & Marine Sanctuary</title>
   <meta name="description" content="Discover the Kingdom of Tonga — experience swimming with humpback whales, pristine coral atolls, ancient Polynesian culture, blowholes, and tropical island adventures.">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👑</text></svg>">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('tonga_theme');
+        var theme = saved === 'light' || saved === 'dark'
+          ? saved
+          : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+        document.querySelector('meta[name="theme-color"]').content = theme === 'dark' ? '#161614' : '#ebe7df';
+      } catch (e) {}
+    })();
+  </script>
   <link rel="stylesheet" href="/src/style.css">
 </head>
 <body>
@@ -189,12 +202,12 @@
           </div>
           
           <svg class="svg-map" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
-            <rect width="800" height="400" fill="rgba(7, 42, 74, 0.4)" rx="16"/>
-            <path d="M 0,100 Q 400,120 800,100 M 0,200 Q 400,220 800,200 M 0,300 Q 400,320 800,300" stroke="rgba(0, 229, 216, 0.15)" stroke-width="1" fill="none"/>
+            <rect width="800" height="400" fill="var(--glass-bg)" rx="16"/>
+            <path d="M 0,100 Q 400,120 800,100 M 0,200 Q 400,220 800,200 M 0,300 Q 400,320 800,300" stroke="color-mix(in srgb, var(--lagoon-turquoise) 15%, transparent)" stroke-width="1" fill="none"/>
             
             <!-- Vava'u Pin -->
             <g class="map-island-pin" data-island="vavau">
-              <circle cx="560" cy="110" r="16" fill="rgba(0, 229, 216, 0.2)" stroke="var(--lagoon-turquoise)" stroke-width="2"/>
+              <circle cx="560" cy="110" r="16" fill="color-mix(in srgb, var(--lagoon-turquoise) 20%, transparent)" stroke="var(--lagoon-turquoise)" stroke-width="2"/>
               <circle cx="560" cy="110" r="7" fill="var(--lagoon-turquoise)"/>
               <text x="590" y="115" fill="var(--text-main)" font-weight="700" font-size="14">Vava'u Group</text>
               <text x="590" y="132" fill="var(--text-muted)" font-size="11">Sailing & Whales</text>
@@ -202,7 +215,7 @@
 
             <!-- Ha'apai Pin -->
             <g class="map-island-pin" data-island="haapai">
-              <circle cx="450" cy="200" r="16" fill="rgba(255, 186, 8, 0.2)" stroke="var(--gold-warm)" stroke-width="2"/>
+              <circle cx="450" cy="200" r="16" fill="color-mix(in srgb, var(--gold-warm) 20%, transparent)" stroke="var(--gold-warm)" stroke-width="2"/>
               <circle cx="450" cy="200" r="7" fill="var(--gold-warm)"/>
               <text x="480" y="205" fill="var(--text-main)" font-weight="700" font-size="14">Ha'apai Group</text>
               <text x="480" y="222" fill="var(--text-muted)" font-size="11">Coral Atolls & Sandbars</text>
@@ -210,7 +223,7 @@
 
             <!-- Tongatapu Pin -->
             <g class="map-island-pin" data-island="tongatapu">
-              <circle cx="320" cy="300" r="18" fill="rgba(230, 35, 60, 0.2)" stroke="var(--primary-royal)" stroke-width="2"/>
+              <circle cx="320" cy="300" r="18" fill="color-mix(in srgb, var(--primary-royal) 20%, transparent)" stroke="var(--primary-royal)" stroke-width="2"/>
               <circle cx="320" cy="300" r="8" fill="var(--primary-royal)"/>
               <text x="350" y="305" fill="var(--text-main)" font-weight="700" font-size="14">Tongatapu (Capital)</text>
               <text x="350" y="322" fill="var(--text-muted)" font-size="11">Royal Seat & Megaliths</text>
@@ -218,7 +231,7 @@
 
             <!-- 'Eua Pin -->
             <g class="map-island-pin" data-island="eua">
-              <circle cx="380" cy="335" r="14" fill="rgba(0, 229, 216, 0.2)" stroke="var(--lagoon-turquoise)" stroke-width="2"/>
+              <circle cx="380" cy="335" r="14" fill="color-mix(in srgb, var(--lagoon-turquoise) 20%, transparent)" stroke="var(--lagoon-turquoise)" stroke-width="2"/>
               <circle cx="380" cy="335" r="6" fill="var(--lagoon-turquoise)"/>
               <text x="405" y="340" fill="var(--text-main)" font-weight="700" font-size="13">'Eua Island</text>
               <text x="405" y="355" fill="var(--text-muted)" font-size="11">Ancient Rainforest Treks</text>
@@ -265,7 +278,7 @@
           <div class="whale-hero-content">
             <span class="section-tag" style="color:#ffffff;">SANCTUARY OF THE PACIFIC</span>
             <h2 style="font-size:2.5rem; font-weight:800; margin-bottom:0.5rem; color:#ffffff;">Swim with Migrating Humpbacks</h2>
-            <p style="color:#f1f5f9; font-size:1.05rem;">Tonga is one of only three places on Earth where humans can legally swim alongside wild humpback whales in protected waters.</p>
+            <p style="color:#f4f2ed; font-size:1.05rem;">Tonga is one of only three places on Earth where humans can legally swim alongside wild humpback whales in protected waters.</p>
             <button class="btn-primary" id="btn-play-whale-synth" style="margin-top:1.25rem;">
               🔊 Listen to Humpback Whale Call Soundscape
             </button>
@@ -388,7 +401,7 @@
           <div class="glass-panel" style="padding:2rem;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;">
               <h3 class="font-royal" style="color:var(--gold-warm);">💵 Currency & Budget Converter</h3>
-              <span id="live-rate-badge" style="font-size:0.75rem; background:rgba(0, 229, 216, 0.15); color:var(--lagoon-turquoise); padding:0.25rem 0.6rem; border-radius:12px; font-weight:600;">Updating live rates...</span>
+              <span id="live-rate-badge" style="font-size:0.75rem; background:color-mix(in srgb, var(--lagoon-turquoise) 15%, transparent); color:var(--lagoon-turquoise); padding:0.25rem 0.6rem; border-radius:12px; font-weight:600;">Updating live rates...</span>
             </div>
             
             <div class="form-group">

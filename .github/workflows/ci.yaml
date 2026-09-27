@@ -46,3 +46,27 @@ jobs:
           dockerfile: "Dockerfile"
           ignore: DL3008,DL3018,DL3013
         continue-on-error: true
+
+  app:
+    name: Audit & Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Dependency Audit
+        run: npm audit --omit=dev
+
+      - name: Verify Build
+        run: npm run build

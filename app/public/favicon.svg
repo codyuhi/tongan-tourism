@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <style>
+    /* Light browser chrome -> Juniper whale and sea, Rust sun */
+    .whale { fill: #204b67; }
+    .sea { stroke: #204b67; }
+    .sun { fill: #c7370f; }
+
+    /* Dark browser chrome -> pale Juniper, bright Rust */
+    @media (prefers-color-scheme: dark) {
+      .whale { fill: #8fc1de; }
+      .sea { stroke: #8fc1de; }
+      .sun { fill: #e0532b; }
+    }
+  </style>
+  <!-- Sun -->
+  <circle class="sun" cx="52" cy="11" r="5" />
+  <!-- Humpback fluke rising from the lagoon -->
+  <path class="whale" d="M 32 40 C 31.5 33 30 29 26 26.5 C 20.5 23 13 23 5.5 16 C 8 25.5 16 30.5 25 31.5 C 28 32 30 35 30.5 40 Z" />
+  <path class="whale" d="M 32 40 C 31.5 33 30 29 26 26.5 C 20.5 23 13 23 5.5 16 C 8 25.5 16 30.5 25 31.5 C 28 32 30 35 30.5 40 Z" transform="translate(64 0) scale(-1 1)" />
+  <rect class="whale" x="29" y="38" width="6" height="10" rx="2" />
+  <!-- Waves -->
+  <path class="sea" d="M 5 50 Q 11.5 45 18 50 T 31 50 T 44 50 T 57 50" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+  <path class="sea" d="M 11 58 Q 17.5 53.5 24 58 T 37 58 T 50 58" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.7" />
+</svg>
