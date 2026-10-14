@@ -6,3 +6,4 @@ app/dist
 .dockerignore
 archive
 npm-debug.log
+android/

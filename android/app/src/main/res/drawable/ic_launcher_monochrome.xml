@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group
+        android:translateX="26.8"
+        android:translateY="26.8"
+        android:scaleX="0.85"
+        android:scaleY="0.85">
+        <!-- Sun -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M 47,11 a 5,5 0 1,0 10,0 a 5,5 0 1,0 -10,0" />
+        <!-- Left Fluke -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M 32,40 C 31.5,33 30,29 26,26.5 C 20.5,23 13,23 5.5,16 C 8,25.5 16,30.5 25,31.5 C 28,32 30,35 30.5,40 Z" />
+        <!-- Right Fluke (mirrored) -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M 32,40 C 32.5,33 34,29 38,26.5 C 43.5,23 51,23 58.5,16 C 56,25.5 48,30.5 39,31.5 C 36,32 34,35 33.5,40 Z" />
+        <!-- Tail Stock -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M 29,38 h 6 v 10 h -6 z" />
+        <!-- Ocean Waves -->
+        <path
+            android:strokeColor="#FFFFFF"
+            android:strokeWidth="4"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:fillColor="#00000000"
+            android:pathData="M 5,50 Q 11.5,45 18,50 T 31,50 T 44,50 T 57,50" />
+        <path
+            android:strokeColor="#FFFFFF"
+            android:strokeWidth="3.5"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:fillColor="#00000000"
+            android:pathData="M 11,58 Q 17.5,53.5 24,58 T 37,58 T 50,58" />
+    </group>
+</vector>

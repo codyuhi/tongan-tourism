@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Tonga Tourism</string>
+    <string name="shortcut_planner">Itinerary Planner</string>
+    <string name="shortcut_planner_long">Custom Travel Itinerary Planner</string>
+    <string name="shortcut_whales">Whale Sanctuary</string>
+    <string name="shortcut_whales_long">Humpback Whale Swim Guide</string>
+    <string name="shortcut_phrases">Phrasebook</string>
+    <string name="shortcut_phrases_long">Faka-Tonga Phrasebook &amp; Etiquette</string>
+</resources>

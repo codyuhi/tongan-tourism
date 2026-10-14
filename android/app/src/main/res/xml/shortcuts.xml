@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="planner"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_planner"
+        android:shortcutShortLabel="@string/shortcut_planner"
+        android:shortcutLongLabel="@string/shortcut_planner_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="@string/package_name"
+            android:targetClass="online.codyuhi.tongantourism.MainActivity"
+            android:data="tonga://planner" />
+    </shortcut>
+    <shortcut
+        android:shortcutId="whales"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_whales"
+        android:shortcutShortLabel="@string/shortcut_whales"
+        android:shortcutLongLabel="@string/shortcut_whales_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="@string/package_name"
+            android:targetClass="online.codyuhi.tongantourism.MainActivity"
+            android:data="tonga://whales" />
+    </shortcut>
+    <shortcut
+        android:shortcutId="phrases"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_phrases"
+        android:shortcutShortLabel="@string/shortcut_phrases"
+        android:shortcutLongLabel="@string/shortcut_phrases_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="@string/package_name"
+            android:targetClass="online.codyuhi.tongantourism.MainActivity"
+            android:data="tonga://phrases" />
+    </shortcut>
+</shortcuts>
