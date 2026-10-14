@@ -3,7 +3,9 @@ package online.codyuhi.tongantourism.ui.components
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -91,11 +93,15 @@ fun StatPill(
             .clip(RoundedCornerShape(6.dp))
             .background(Cedar.colors.inset)
             .border(BorderStroke(1.dp, Cedar.colors.borderSubtle), RoundedCornerShape(6.dp))
-            .padding(horizontal = 10.dp, vertical = 6.dp)
+            .padding(horizontal = 10.dp, vertical = 7.dp)
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth()
+        ) {
             Text(
-                text = "$label: ",
+                text = label,
                 style = androidx.compose.material3.MaterialTheme.typography.labelSmall.copy(
                     color = Cedar.colors.textMuted
                 )

@@ -1,5 +1,6 @@
 package online.codyuhi.tongantourism.ui.screens.discover
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -273,7 +274,7 @@ private fun LiveInfoBar(
                 }
 
                 // Weather
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Column(horizontalAlignment = Alignment.End) {
                     Text(
                         text = "☀️ Live Weather",
                         style = MaterialTheme.typography.labelSmall.copy(color = Cedar.colors.textMuted)
@@ -286,21 +287,32 @@ private fun LiveInfoBar(
                         )
                     )
                 }
+            }
 
-                // Currency Rate
-                Column(horizontalAlignment = Alignment.End) {
-                    Text(
-                        text = "💱 Market Rate",
-                        style = MaterialTheme.typography.labelSmall.copy(color = Cedar.colors.textMuted)
+            Spacer(modifier = Modifier.height(10.dp))
+
+            // Currency Rate full width inside
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(6.dp))
+                    .background(Cedar.colors.inset)
+                    .border(BorderStroke(1.dp, Cedar.colors.borderSubtle), RoundedCornerShape(6.dp))
+                    .padding(horizontal = 10.dp, vertical = 7.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "💱 Market Exchange Rate",
+                    style = MaterialTheme.typography.labelSmall.copy(color = Cedar.colors.textMuted)
+                )
+                Text(
+                    text = exchangeRate,
+                    style = MaterialTheme.typography.titleSmall.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = Cedar.colors.brand
                     )
-                    Text(
-                        text = exchangeRate,
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            fontWeight = FontWeight.Bold,
-                            color = Cedar.colors.brand
-                        )
-                    )
-                }
+                )
             }
         }
     }
@@ -308,30 +320,37 @@ private fun LiveInfoBar(
 
 @Composable
 private fun KingdomStatsSection(stats: online.codyuhi.tongantourism.domain.KingdomStats) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        StatPill(
-            label = "Islands",
-            value = "${stats.islandsCount}",
-            modifier = Modifier.weight(1f)
-        )
-        StatPill(
-            label = "Inhabited",
-            value = "${stats.inhabitedCount}",
-            modifier = Modifier.weight(1f)
-        )
-        StatPill(
-            label = "Whales",
-            value = stats.whalesAnnually,
-            modifier = Modifier.weight(1f)
-        )
-        StatPill(
-            label = "Heritage",
-            value = stats.historyYears,
-            modifier = Modifier.weight(1f)
-        )
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            StatPill(
+                label = "Total Islands",
+                value = "${stats.islandsCount}",
+                modifier = Modifier.weight(1f)
+            )
+            StatPill(
+                label = "Inhabited",
+                value = "${stats.inhabitedCount}",
+                modifier = Modifier.weight(1f)
+            )
+        }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            StatPill(
+                label = "Whales Annually",
+                value = stats.whalesAnnually,
+                modifier = Modifier.weight(1f)
+            )
+            StatPill(
+                label = "Heritage",
+                value = stats.historyYears,
+                modifier = Modifier.weight(1f)
+            )
+        }
     }
 }
 

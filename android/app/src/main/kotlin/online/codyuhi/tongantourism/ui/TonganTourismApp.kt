@@ -98,8 +98,14 @@ fun TonganTourismApp(
             NavDestination.entries.forEach { dest ->
                 val selected = currentRoute?.contains(dest.name, ignoreCase = true) == true
                 item(
-                    icon = { Text(text = dest.icon, fontSize = 20.sp) },
-                    label = { Text(dest.label) },
+                    icon = { Text(text = dest.icon, fontSize = 18.sp) },
+                    label = {
+                        Text(
+                            text = dest.label,
+                            style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
+                            maxLines = 1
+                        )
+                    },
                     selected = selected,
                     onClick = {
                         navController.navigate(dest.route) {
