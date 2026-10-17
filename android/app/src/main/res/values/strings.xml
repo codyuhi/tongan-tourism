@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Tonga Tourism</string>
+    <string name="app_name">Uhi-tonga-tourism</string>
     <string name="shortcut_planner">Itinerary Planner</string>
     <string name="shortcut_planner_long">Custom Travel Itinerary Planner</string>
     <string name="shortcut_whales">Whale Sanctuary</string>
