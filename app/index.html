@@ -372,11 +372,22 @@
 
           <!-- Generated Plan Output -->
           <div class="glass-panel" style="padding:2rem;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+            <div class="planner-header-actions" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-bottom:1.5rem;">
               <h3 class="font-royal" id="plan-title-display">Your Island Plan</h3>
-              <button class="btn-secondary" id="btn-save-current-plan" style="padding:0.4rem 1rem; font-size:0.85rem;">
-                💾 Save Itinerary
-              </button>
+              <div class="itinerary-actions-row" style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                <button class="btn-secondary" id="btn-save-current-plan" style="padding:0.45rem 0.85rem; font-size:0.85rem;" title="Save to local trip drawer">
+                  💾 <span>Save</span>
+                </button>
+                <button class="btn-secondary" id="btn-print-plan" style="padding:0.45rem 0.85rem; font-size:0.85rem;" title="Print ink-friendly travel guide or export to PDF">
+                  🖨️ <span>Print / PDF</span>
+                </button>
+                <button class="btn-secondary" id="btn-copy-plan-md" style="padding:0.45rem 0.85rem; font-size:0.85rem;" title="Copy offline checklist to clipboard in Markdown">
+                  📋 <span>Copy Markdown</span>
+                </button>
+                <button class="btn-secondary" id="btn-download-plan-md" style="padding:0.45rem 0.85rem; font-size:0.85rem;" title="Download offline Markdown file (.md)">
+                  📥 <span>Download .md</span>
+                </button>
+              </div>
             </div>
 
             <div id="itinerary-days-container">
@@ -384,6 +395,9 @@
             </div>
           </div>
         </div>
+
+        <!-- Printable Ink-Friendly Sheet (Formatted exclusively for @media print) -->
+        <div id="printable-itinerary-sheet" class="printable-itinerary-sheet" aria-hidden="true"></div>
       </div>
     </section>
 
@@ -544,6 +558,9 @@
       <span class="nav-text">More</span>
     </button>
   </nav>
+
+  <!-- Interactive Toast Feedback -->
+  <div id="toast-notification" class="toast-notification" role="status" aria-live="polite"></div>
 
   <script type="module" src="/src/main.js"></script>
 </body>

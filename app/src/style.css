@@ -1203,3 +1203,235 @@ dialog {
     font-size: 0.85rem;
   }
 }
+
+/* Printable Itinerary & Offline Checklist Styles */
+.printable-itinerary-sheet {
+  display: none;
+}
+
+.toast-notification {
+  position: fixed;
+  bottom: calc(80px + var(--sab));
+  right: 1.5rem;
+  background: var(--bg-surface-solid);
+  border: 1px solid var(--lagoon-turquoise);
+  color: var(--text-main);
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-weight: 600;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(12px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  z-index: 1000;
+  max-width: 90vw;
+}
+
+.toast-notification.show {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+@media print {
+  @page {
+    margin: 1.2cm;
+    size: A4 portrait;
+  }
+
+  /* Reset body and hide web layout chrome */
+  html, body {
+    background: #ffffff !important;
+    color: #111111 !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+    font-size: 10pt !important;
+    line-height: 1.4 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .site-header,
+  .mobile-bottom-nav,
+  .mobile-drawer,
+  .mobile-drawer-backdrop,
+  .site-footer,
+  .audio-bar,
+  .hero-section,
+  #islands-view,
+  #culture-view,
+  #whales-view,
+  #essentials-view,
+  dialog,
+  .toast-notification,
+  .section-header,
+  .builder-grid > div:first-child,
+  .planner-header-actions,
+  #itinerary-days-container {
+    display: none !important;
+  }
+
+  #main-content {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .main-container {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+  }
+
+  #planner-view {
+    display: block !important;
+    opacity: 1 !important;
+  }
+
+  .builder-grid {
+    display: block !important;
+  }
+
+  .builder-grid > div:last-child {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+
+  /* Printable Sheet Visible and Formatted */
+  .printable-itinerary-sheet {
+    display: block !important;
+    visibility: visible !important;
+    color: #111111 !important;
+    background: #ffffff !important;
+  }
+
+  .print-header {
+    border-bottom: 2px solid #0b3d2e;
+    padding-bottom: 0.6rem;
+    margin-bottom: 0.8rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .print-title {
+    font-size: 16pt;
+    font-weight: 800;
+    margin: 0 0 0.25rem;
+    color: #0b3d2e;
+    letter-spacing: -0.01em;
+  }
+
+  .print-meta {
+    font-size: 9pt;
+    color: #444444;
+  }
+
+  .print-section {
+    margin-bottom: 1rem;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .print-section-title {
+    font-size: 11pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #0b3d2e;
+    border-bottom: 1px solid #cccccc;
+    padding-bottom: 0.25rem;
+    margin: 0.8rem 0 0.5rem;
+  }
+
+  .print-days-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .print-day-card {
+    border: 1px solid #d0d0d0;
+    border-left: 4px solid #0b3d2e;
+    padding: 0.45rem 0.65rem;
+    border-radius: 4px;
+    background: #fafafa !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .print-day-header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 700;
+    font-size: 9.5pt;
+    margin-bottom: 0.15rem;
+  }
+
+  .print-day-desc {
+    font-size: 8.5pt;
+    color: #333333;
+    margin: 0;
+  }
+
+  .print-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+  }
+
+  .print-info-box {
+    border: 1px solid #e0e0e0;
+    padding: 0.5rem 0.65rem;
+    border-radius: 4px;
+    background: #fdfdfd !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .print-info-box h4 {
+    margin: 0 0 0.25rem;
+    font-size: 9pt;
+    font-weight: 700;
+    color: #0b3d2e;
+  }
+
+  .print-info-box p,
+  .print-info-box ul {
+    margin: 0;
+    font-size: 8pt;
+    color: #333333;
+    padding-left: 1rem;
+  }
+
+  .print-phrases-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 8pt;
+    margin-top: 0.35rem;
+  }
+
+  .print-phrases-table th,
+  .print-phrases-table td {
+    border: 1px solid #e0e0e0;
+    padding: 3px 6px;
+    text-align: left;
+  }
+
+  .print-phrases-table th {
+    background: #f0f0f0 !important;
+    font-weight: 700;
+  }
+
+  .print-footer {
+    border-top: 1px solid #cccccc;
+    margin-top: 1.25rem;
+    padding-top: 0.4rem;
+    font-size: 7.5pt;
+    color: #666666;
+    display: flex;
+    justify-content: space-between;
+  }
+}

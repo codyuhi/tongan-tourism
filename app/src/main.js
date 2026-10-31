@@ -315,6 +315,245 @@ function generateItineraryPlan() {
   state.currentPlan = { id: `plan-${Date.now()}`, duration, vibe, islands: selectedIslands, days };
 }
 
+// Generate Offline-Friendly Markdown Format
+function formatPlanAsMarkdown(plan) {
+  const dateStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  const islandsList = Array.isArray(plan.islands) ? plan.islands.join(', ') : (plan.islands || 'Tongatapu');
+
+  let md = `# 🌴 Kingdom of Tonga Travel Itinerary & Offline Checklist\n\n`;
+  md += `**Trip**: ${plan.duration}-Day ${plan.vibe}\n`;
+  md += `**Archipelagos**: ${islandsList}\n`;
+  md += `**Generated**: ${dateStr}\n\n`;
+  md += `---\n\n`;
+
+  md += `## 📅 Day-by-Day Schedule\n\n`;
+  plan.days.forEach(d => {
+    md += `### [ ] Day ${d.day} • ${d.island.toUpperCase()}\n`;
+    md += `**${d.title}**\n\n`;
+    md += `${d.desc}\n\n`;
+  });
+
+  md += `---\n\n`;
+  md += `## ⛵ Inter-Island Logistics & Boat / Flight Travel\n\n`;
+  md += `- **Domestic Air (${TONGA_DATA.interIslandLogistics.domesticAir.operator})**: ${TONGA_DATA.interIslandLogistics.domesticAir.routes}\n`;
+  md += `  - Baggage: ${TONGA_DATA.interIslandLogistics.domesticAir.baggage}\n`;
+  md += `  - Sunday Notice: ${TONGA_DATA.interIslandLogistics.domesticAir.sundayRule}\n`;
+  md += `- **Ferries (${TONGA_DATA.interIslandLogistics.ferries.operator})**: ${TONGA_DATA.interIslandLogistics.ferries.routes}\n`;
+  md += `  - Advice: ${TONGA_DATA.interIslandLogistics.ferries.advice}\n`;
+  md += `- **Water Taxis**: ${TONGA_DATA.interIslandLogistics.localBoats.description}\n\n`;
+
+  md += `---\n\n`;
+  md += `## ⛪ Sunday Observance (Sāpate Law) & Etiquette\n\n`;
+  md += `- **Constitutional Sacred Rest Day**: ${TONGA_DATA.sundayObservance.constitutionalLaw}\n`;
+  md += `- **Choral Church Services**: ${TONGA_DATA.sundayObservance.services}\n`;
+  md += `- **Modest Dress Code**: ${TONGA_DATA.sundayObservance.dressCode}\n`;
+  md += `- **Tourist Resorts**: ${TONGA_DATA.sundayObservance.resorts}\n\n`;
+
+  md += `---\n\n`;
+  md += `## 🚨 Emergency Contacts & Essential Field Logistics (+676)\n\n`;
+  md += `- **Police Emergency**: ${TONGA_DATA.emergencyLogistics.police.phone} (${TONGA_DATA.emergencyLogistics.police.notes})\n`;
+  md += `- **Ambulance & Hospital**: ${TONGA_DATA.emergencyLogistics.ambulance.phone} (${TONGA_DATA.emergencyLogistics.ambulance.notes})\n`;
+  md += `- **Fire & Rescue**: ${TONGA_DATA.emergencyLogistics.fire.phone}\n`;
+  md += `- **Maritime Search & Rescue**: ${TONGA_DATA.emergencyLogistics.marineRescue.phone} (${TONGA_DATA.emergencyLogistics.marineRescue.notes})\n`;
+  md += `- **Outer Island Hospitals**:\n`;
+  TONGA_DATA.emergencyLogistics.outerHospitals.forEach(h => {
+    md += `  - ${h.name}: ${h.phone}\n`;
+  });
+  md += `- **Currency / Cash**: ${TONGA_DATA.emergencyLogistics.currencyNotes}\n`;
+  md += `- **Electricity**: ${TONGA_DATA.emergencyLogistics.electricity}\n\n`;
+
+  md += `---\n\n`;
+  md += `## 🗣️ Key Faka-Tonga Travel Phrases\n\n`;
+  TONGA_DATA.phrases.forEach(p => {
+    md += `- **"${p.tongan}"** (${p.english}): Pronounced _"${p.pronunciation}"_ • ${p.usage}\n`;
+  });
+
+  md += `\n---\n*Exported from Kingdom of Tonga Tourism (offline travel field guide)*\n`;
+  return md;
+}
+
+// Render Ink-Friendly Print Sheet for @media print
+function renderPrintSheet(plan) {
+  const sheet = document.getElementById('printable-itinerary-sheet');
+  if (!sheet) return;
+
+  const dateStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  const islandsList = Array.isArray(plan.islands) ? plan.islands.join(', ') : (plan.islands || 'Tongatapu');
+
+  sheet.innerHTML = `
+    <div class="print-header">
+      <div>
+        <h1 class="print-title">Kingdom of Tonga • Travel Itinerary & Field Guide</h1>
+        <div class="print-meta">
+          <strong>Trip:</strong> ${plan.duration}-Day ${plan.vibe} &nbsp;|&nbsp;
+          <strong>Archipelagos:</strong> ${islandsList} &nbsp;|&nbsp;
+          <strong>Export Date:</strong> ${dateStr}
+        </div>
+      </div>
+      <div style="text-align:right; font-size:8.5pt; color:#444444;">
+        Official Travel Sanctuary Guide<br>
+        <strong>tonga.lan.codyuhi.online</strong>
+      </div>
+    </div>
+
+    <!-- Daily Schedule -->
+    <div class="print-section">
+      <div class="print-section-title">📅 Daily Itinerary Schedule</div>
+      <div class="print-days-grid">
+        ${plan.days.map(d => `
+          <div class="print-day-card">
+            <div class="print-day-header">
+              <span>☐ DAY ${d.day} • ${d.island.toUpperCase()}</span>
+              <span style="font-size:8.5pt; font-weight:600; color:#0b3d2e;">${d.title}</span>
+            </div>
+            <p class="print-day-desc">${d.desc}</p>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <!-- Logistics & Sunday Etiquette Grid -->
+    <div class="print-section">
+      <div class="print-section-title">⛵ Transport Logistics & Cultural Observance</div>
+      <div class="print-info-grid">
+        <div class="print-info-box">
+          <h4>✈️ Inter-Island Air & Ferry Logistics</h4>
+          <p style="margin-bottom:0.35rem;"><strong>Lulutai Airlines:</strong> ${TONGA_DATA.interIslandLogistics.domesticAir.routes}</p>
+          <p style="margin-bottom:0.35rem;"><strong>Luggage Limit:</strong> ${TONGA_DATA.interIslandLogistics.domesticAir.baggage}</p>
+          <p style="margin-bottom:0.35rem;"><strong>Sunday Notice:</strong> ${TONGA_DATA.interIslandLogistics.domesticAir.sundayRule}</p>
+          <p><strong>Ferries:</strong> ${TONGA_DATA.interIslandLogistics.ferries.routes}</p>
+        </div>
+        <div class="print-info-box">
+          <h4>⛪ Sunday Observance (Sāpate Law)</h4>
+          <p style="margin-bottom:0.35rem;"><strong>Constitutional Rest:</strong> ${TONGA_DATA.sundayObservance.constitutionalLaw}</p>
+          <p style="margin-bottom:0.35rem;"><strong>Church Services:</strong> ${TONGA_DATA.sundayObservance.services}</p>
+          <p style="margin-bottom:0.35rem;"><strong>Dress Code:</strong> ${TONGA_DATA.sundayObservance.dressCode}</p>
+          <p><strong>Resorts:</strong> ${TONGA_DATA.sundayObservance.resorts}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Emergency & Phrases Grid -->
+    <div class="print-section">
+      <div class="print-section-title">🚨 Emergency Directory & Essential Phrases</div>
+      <div class="print-info-grid">
+        <div class="print-info-box">
+          <h4>📞 Emergency & Medical Contacts (+676)</h4>
+          <p style="margin-bottom:0.25rem;"><strong>Police:</strong> ${TONGA_DATA.emergencyLogistics.police.phone}</p>
+          <p style="margin-bottom:0.25rem;"><strong>Ambulance / Vaiola Hospital:</strong> ${TONGA_DATA.emergencyLogistics.ambulance.phone}</p>
+          <p style="margin-bottom:0.25rem;"><strong>Maritime Rescue:</strong> ${TONGA_DATA.emergencyLogistics.marineRescue.phone}</p>
+          <p style="margin-bottom:0.25rem;"><strong>Outer Hospitals:</strong> Vava'u (70-201) | Ha'apai (60-224) | 'Eua (50-101)</p>
+          <p style="margin-bottom:0.25rem;"><strong>Currency:</strong> ${TONGA_DATA.emergencyLogistics.currencyNotes}</p>
+          <p><strong>Electricity:</strong> ${TONGA_DATA.emergencyLogistics.electricity}</p>
+        </div>
+        <div class="print-info-box">
+          <h4>🗣️ Useful Faka-Tonga Phrases</h4>
+          <table class="print-phrases-table">
+            <thead>
+              <tr>
+                <th>Tongan</th>
+                <th>English</th>
+                <th>Pronunciation</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${TONGA_DATA.phrases.slice(0, 6).map(p => `
+                <tr>
+                  <td><strong>${p.tongan}</strong></td>
+                  <td>${p.english}</td>
+                  <td><em>${p.pronunciation}</em></td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="print-footer">
+      <span>Kingdom of Tonga Tourism Guide • Sāpate Observance • Whales Sanctuary</span>
+      <span>Keep safe and enjoy your Polynesian journey • 'Ofa atu!</span>
+    </div>
+  `;
+}
+
+// Print / Export Itinerary
+function printPlan(plan) {
+  const targetPlan = plan || state.currentPlan;
+  if (!targetPlan) {
+    generateItineraryPlan();
+  }
+  renderPrintSheet(targetPlan || state.currentPlan);
+  window.print();
+}
+
+// Copy Markdown to Clipboard
+function copyPlanMarkdown(plan) {
+  const targetPlan = plan || state.currentPlan;
+  if (!targetPlan) {
+    generateItineraryPlan();
+  }
+  const md = formatPlanAsMarkdown(targetPlan || state.currentPlan);
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(md)
+      .then(() => showToast('📋 Offline itinerary copied to clipboard in Markdown!'))
+      .catch(() => fallbackCopy(md));
+  } else {
+    fallbackCopy(md);
+  }
+}
+
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try {
+    document.execCommand('copy');
+    showToast('📋 Offline itinerary copied to clipboard in Markdown!');
+  } catch {
+    showToast('Failed to copy to clipboard.');
+  }
+  document.body.removeChild(ta);
+}
+
+// Download Markdown File
+function downloadPlanMarkdown(plan) {
+  const targetPlan = plan || state.currentPlan;
+  if (!targetPlan) {
+    generateItineraryPlan();
+  }
+  const activePlan = targetPlan || state.currentPlan;
+  const md = formatPlanAsMarkdown(activePlan);
+  const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const safeName = `${activePlan.duration}-Day-${activePlan.vibe}`.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  a.href = url;
+  a.download = `tonga-itinerary-${safeName}.md`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('📥 Downloaded offline itinerary (.md)!');
+}
+
+// Toast Feedback Notification
+let toastTimer = null;
+function showToast(msg) {
+  const toast = document.getElementById('toast-notification');
+  if (!toast) return;
+  toast.textContent = msg;
+  toast.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    toast.classList.remove('show');
+  }, 3500);
+}
+
 // Save Current Plan to LocalStorage
 function saveCurrentPlan() {
   if (!state.currentPlan) {
@@ -328,7 +567,7 @@ function saveCurrentPlan() {
 
   localStorage.setItem('tonga_saved_trips', JSON.stringify(state.savedItineraries));
   updateSavedTripBadge();
-  alert('✨ Itinerary saved! Click "Saved Trip" in the top bar anytime to view your saved plans.');
+  showToast('✨ Itinerary saved! Access anytime in Saved Trips.');
 }
 
 // Update Badge Count
@@ -363,12 +602,18 @@ function openSavedTripsModal() {
   } else {
     body.innerHTML = state.savedItineraries.map((plan, idx) => `
       <div style="background:var(--bg-surface-solid); border:1px solid var(--glass-border); padding:1.25rem; border-radius:12px; margin-bottom:1rem;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
-          <h4 class="font-royal" style="color:var(--lagoon-turquoise);">${plan.duration}-Day ${plan.vibe}</h4>
-          <button class="btn-delete-plan" data-idx="${idx}" style="background:none; border:none; color:var(--primary-royal); cursor:pointer; font-weight:700;">Delete</button>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem; flex-wrap:wrap; gap:0.5rem;">
+          <h4 class="font-royal" style="color:var(--lagoon-turquoise); margin:0;">${plan.duration}-Day ${plan.vibe}</h4>
+          <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
+            <button class="btn-secondary btn-load-plan" data-idx="${idx}" style="padding:0.25rem 0.6rem; font-size:0.75rem;" title="Load in Planner">Load</button>
+            <button class="btn-secondary btn-print-plan-item" data-idx="${idx}" style="padding:0.25rem 0.6rem; font-size:0.75rem;" title="Print or PDF">🖨️ Print</button>
+            <button class="btn-secondary btn-copy-plan-item" data-idx="${idx}" style="padding:0.25rem 0.6rem; font-size:0.75rem;" title="Copy Markdown">📋 Copy</button>
+            <button class="btn-secondary btn-download-plan-item" data-idx="${idx}" style="padding:0.25rem 0.6rem; font-size:0.75rem;" title="Download .md">📥 .md</button>
+            <button class="btn-delete-plan" data-idx="${idx}" style="background:none; border:none; color:var(--primary-royal); cursor:pointer; font-weight:700; font-size:0.85rem; padding:0.25rem 0.5rem;">Delete</button>
+          </div>
         </div>
-        <p style="color:var(--text-muted); font-size:0.85rem;">Islands: ${plan.islands.join(', ')}</p>
-        <div style="margin-top:0.75rem; display:flex; flex-direction:column; gap:0.5rem;">
+        <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:0.5rem;">Islands: ${plan.islands.join(', ')}</p>
+        <div style="display:flex; flex-direction:column; gap:0.4rem;">
           ${plan.days.map(d => `
             <div style="font-size:0.85rem; color:var(--text-main);">
               <strong>Day ${d.day} (${d.island}):</strong> ${d.title}
@@ -377,6 +622,61 @@ function openSavedTripsModal() {
         </div>
       </div>
     `).join('');
+
+    body.querySelectorAll('.btn-load-plan').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const idx = parseInt(e.target.dataset.idx, 10);
+        const plan = state.savedItineraries[idx];
+        if (plan) {
+          state.currentPlan = plan;
+          const container = document.getElementById('itinerary-days-container');
+          const titleDisplay = document.getElementById('plan-title-display');
+          if (titleDisplay) titleDisplay.textContent = `${plan.duration}-Day ${plan.vibe} Plan`;
+          if (container) {
+            container.innerHTML = plan.days.map(day => `
+              <div class="day-plan-card">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <span style="font-weight:700; color:var(--lagoon-turquoise); font-size:0.9rem;">DAY ${day.day} • ${day.island.toUpperCase()}</span>
+                  <span style="font-size:0.75rem; color:var(--text-muted); background:var(--glass-bg); padding:0.2rem 0.5rem; border-radius:4px;">Scheduled</span>
+                </div>
+                <h4 style="font-size:1.1rem; font-weight:700; margin:0.4rem 0 0.2rem;">${day.title}</h4>
+                <p style="color:var(--text-muted); font-size:0.9rem; line-height:1.5;">${day.desc}</p>
+              </div>
+            `).join('');
+          }
+          modal.close();
+          navigateToView('planner');
+          showToast('Loaded itinerary into Planner!');
+        }
+      });
+    });
+
+    body.querySelectorAll('.btn-print-plan-item').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const idx = parseInt(e.target.dataset.idx, 10);
+        const plan = state.savedItineraries[idx];
+        if (plan) {
+          modal.close();
+          printPlan(plan);
+        }
+      });
+    });
+
+    body.querySelectorAll('.btn-copy-plan-item').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const idx = parseInt(e.target.dataset.idx, 10);
+        const plan = state.savedItineraries[idx];
+        if (plan) copyPlanMarkdown(plan);
+      });
+    });
+
+    body.querySelectorAll('.btn-download-plan-item').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const idx = parseInt(e.target.dataset.idx, 10);
+        const plan = state.savedItineraries[idx];
+        if (plan) downloadPlanMarkdown(plan);
+      });
+    });
 
     body.querySelectorAll('.btn-delete-plan').forEach(btn => {
       btn.addEventListener('click', (e) => {
@@ -528,6 +828,9 @@ function initApp() {
   // Itinerary Generator Form Controls
   document.getElementById('btn-generate-plan')?.addEventListener('click', generateItineraryPlan);
   document.getElementById('btn-save-current-plan')?.addEventListener('click', saveCurrentPlan);
+  document.getElementById('btn-print-plan')?.addEventListener('click', () => printPlan());
+  document.getElementById('btn-copy-plan-md')?.addEventListener('click', () => copyPlanMarkdown());
+  document.getElementById('btn-download-plan-md')?.addEventListener('click', () => downloadPlanMarkdown());
   document.getElementById('btn-saved-trips')?.addEventListener('click', openSavedTripsModal);
 
   // Mobile Navigation Drawer Toggle Handlers

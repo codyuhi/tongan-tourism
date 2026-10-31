@@ -1,7 +1,10 @@
 package online.codyuhi.tongantourism.ui.screens.planner
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -250,14 +253,14 @@ fun PlannerScreen(
                 DayScheduleCard(day = day)
             }
 
-            // Action row: Save to Room + Share via Sharesheet
+            // Action row: Save to Room + Copy Markdown + Share via Sharesheet
             item {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     CedarButton(
-                        text = if (state.isSavedSuccess) "Saved to Trips ✓" else "Save Itinerary",
+                        text = if (state.isSavedSuccess) "Saved ✓" else "Save",
                         onClick = { viewModel.saveCurrentItinerary() },
                         icon = "💾",
                         isPrimary = !state.isSavedSuccess,
@@ -265,7 +268,15 @@ fun PlannerScreen(
                     )
 
                     CedarButton(
-                        text = "Share Itinerary",
+                        text = "Copy .md",
+                        onClick = { copyItineraryMarkdown(context, itin) },
+                        icon = "📋",
+                        isPrimary = false,
+                        modifier = Modifier.weight(1f)
+                    )
+
+                    CedarButton(
+                        text = "Share",
                         onClick = { shareItinerary(context, itin) },
                         icon = "📤",
                         isPrimary = false,
@@ -292,6 +303,7 @@ fun PlannerScreen(
                 SavedTripCard(
                     itinerary = saved,
                     onDelete = { viewModel.deleteItinerary(saved.id) },
+                    onCopy = { copyItineraryMarkdown(context, saved) },
                     onShare = { shareItinerary(context, saved) }
                 )
             }
@@ -401,6 +413,7 @@ private fun DayScheduleCard(day: ItineraryDay) {
 private fun SavedTripCard(
     itinerary: SavedItinerary,
     onDelete: () -> Unit,
+    onCopy: () -> Unit,
     onShare: () -> Unit
 ) {
     OutlinedCard(
@@ -447,6 +460,19 @@ private fun SavedTripCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
+                    text = "Copy .md 📋",
+                    style = MaterialTheme.typography.labelSmall.copy(
+                        color = Cedar.colors.brand,
+                        fontWeight = FontWeight.SemiBold
+                    ),
+                    modifier = Modifier
+                        .clickable { onCopy() }
+                        .padding(horizontal = 6.dp, vertical = 4.dp)
+                )
+
+                Spacer(modifier = Modifier.width(10.dp))
+
+                Text(
                     text = "Share 📤",
                     style = MaterialTheme.typography.labelSmall.copy(
                         color = Cedar.colors.brand,
@@ -454,10 +480,10 @@ private fun SavedTripCard(
                     ),
                     modifier = Modifier
                         .clickable { onShare() }
-                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                        .padding(horizontal = 6.dp, vertical = 4.dp)
                 )
 
-                Spacer(modifier = Modifier.width(12.dp))
+                Spacer(modifier = Modifier.width(10.dp))
 
                 Text(
                     text = "Delete ✕",
@@ -467,30 +493,84 @@ private fun SavedTripCard(
                     ),
                     modifier = Modifier
                         .clickable { onDelete() }
-                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                        .padding(horizontal = 6.dp, vertical = 4.dp)
                 )
             }
         }
     }
 }
 
-private fun shareItinerary(context: Context, itinerary: SavedItinerary) {
-    val text = buildString {
-        appendLine("🌴 Kingdom of Tonga Itinerary: ${itinerary.title}")
-        appendLine("Duration: ${itinerary.duration} | Style: ${itinerary.vibe}")
-        appendLine("Islands: ${itinerary.islands.joinToString(", ")}")
+private fun formatItineraryMarkdown(itinerary: SavedItinerary): String = buildString {
+    appendLine("# 🌴 Kingdom of Tonga Travel Itinerary & Offline Checklist")
+    appendLine()
+    appendLine("**Trip**: ${itinerary.duration} ${itinerary.vibe}")
+    appendLine("**Archipelagos**: ${itinerary.islands.joinToString(", ")}")
+    appendLine()
+    appendLine("---")
+    appendLine()
+    appendLine("## 📅 Day-by-Day Schedule")
+    appendLine()
+    itinerary.days.forEach { day ->
+        appendLine("### [ ] Day ${day.day} • ${day.island.uppercase()}")
+        appendLine("**${day.title}**")
+        appendLine(day.desc)
         appendLine()
-        itinerary.days.forEach { day ->
-            appendLine("Day ${day.day} (${day.island}): ${day.title}")
-            appendLine("${day.desc}")
-            appendLine()
-        }
-        appendLine("Shared from Tonga Tourism Native App.")
     }
+    appendLine("---")
+    appendLine()
+    appendLine("## ⛵ Inter-Island Logistics & Boat / Flight Travel")
+    appendLine("- **Domestic Air (Lulutai Airlines)**: Flights connect Tongatapu (TBU) to Vava'u (VAV ~50m), Ha'apai (HPA ~35m), and 'Eua (EUA ~8m).")
+    appendLine("  - Baggage: Strict 15 kg checked + 5 kg carry-on.")
+    appendLine("  - Sunday Notice: No domestic or commercial flights operate on Sundays.")
+    appendLine("- **Ferries (Friendly Islands Shipping Agency)**: MV 'Otuanga'ofa & MV Maggie Cat from Queen Salote Wharf (Nuku'alofa) to 'Eua (daily 2hr), Ha'apai (8-10hr), and Vava'u (12-14hr).")
+    appendLine("- **Water Taxis**: Small wooden skiffs connect Neiafu to outer motus and Pangai to Uoleva/Foa. Lifejackets mandatory.")
+    appendLine()
+    appendLine("---")
+    appendLine()
+    appendLine("## ⛪ Sunday Observance (Sāpate Law) & Etiquette")
+    appendLine("- **Sacred Rest**: The Constitution of Tonga strictly protects the Sabbath. All commerce, shops, motorized watersports, and heavy labor are prohibited.")
+    appendLine("- **Choral Church**: Visitors are warmly invited to Sunday morning services (~10:00 AM) for heavenly polyphonic hymn singing.")
+    appendLine("- **Dress Code**: Modest clothing covering shoulders and knees is mandatory in villages and churches.")
+    appendLine("- **Resort Exemption**: Licensed resorts serve registered guests; quiet recreational swimming allowed.")
+    appendLine()
+    appendLine("---")
+    appendLine()
+    appendLine("## 🚨 Emergency Contacts & Essential Field Logistics (+676)")
+    appendLine("- **Police Emergency**: 922 / (+676) 23-233")
+    appendLine("- **Ambulance & Vaiola Hospital (Nuku'alofa)**: 933 / (+676) 23-200")
+    appendLine("- **Outer Island Hospitals**: Vava'u: (+676) 70-201 | Ha'apai: (+676) 60-224 | 'Eua: (+676) 50-101")
+    appendLine("- **Maritime Search & Rescue**: VHF Marine Ch 16 / (+676) 20-222")
+    appendLine("- **Currency**: Tongan Pa'anga (\$T / TOP). Carry cash for Ha'apai, 'Eua, and markets.")
+    appendLine("- **Electricity**: 240V, 50Hz (Type I Australian/NZ style angled 3-pin).")
+    appendLine()
+    appendLine("---")
+    appendLine()
+    appendLine("## 🗣️ Key Faka-Tonga Travel Phrases")
+    appendLine("- **\"Mālō e lelei\"** (Hello / Good day) — Pronounced: *\"mah-LOH eh leh-LEH-ee\"*")
+    appendLine("- **\"Mālō 'aupito\"** (Thank you very much) — Pronounced: *\"mah-LOH ow-PEE-toh\"*")
+    appendLine("- **\"'Ofa atu\"** (With love / Warm regards) — Pronounced: *\"oh-FAH ah-TOO\"*")
+    appendLine("- **\"Fēfe hake?\"** (How are you?) — Pronounced: *\"FEH-feh HAH-keh\"*")
+    appendLine("- **\"Sai pē\"** (I am fine / All good) — Pronounced: *\"SAY peh\"*")
+    appendLine("- **\"Tāufaka'ofa\"** (Beautiful / Magnificent) — Pronounced: *\"tow-fah-kah-OH-fah\"*")
+    appendLine()
+    appendLine("---")
+    appendLine("*Exported from Kingdom of Tonga Tourism (offline travel field guide)*")
+}
+
+private fun copyItineraryMarkdown(context: Context, itinerary: SavedItinerary) {
+    val md = formatItineraryMarkdown(itinerary)
+    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+    val clip = ClipData.newPlainText("Tonga Itinerary", md)
+    clipboard?.setPrimaryClip(clip)
+    Toast.makeText(context, "📋 Offline itinerary copied to clipboard", Toast.LENGTH_SHORT).show()
+}
+
+private fun shareItinerary(context: Context, itinerary: SavedItinerary) {
+    val text = formatItineraryMarkdown(itinerary)
 
     val intent = Intent(Intent.ACTION_SEND).apply {
         type = "text/plain"
-        putExtra(Intent.EXTRA_SUBJECT, itinerary.title)
+        putExtra(Intent.EXTRA_SUBJECT, "Kingdom of Tonga Itinerary: ${itinerary.title}")
         putExtra(Intent.EXTRA_TEXT, text)
     }
     context.startActivity(Intent.createChooser(intent, "Share Itinerary via"))

@@ -276,6 +276,45 @@ export const TONGA_DATA = {
     { region: "Other Countries", rule: "Requires pre-arranged entry permit from Tongan Immigration before arrival.", requirements: "Submit online application 1 month prior." }
   ],
 
+  emergencyLogistics: {
+    police: { label: "Police Emergency Dispatch", phone: "922 / (+676) 23-233", notes: "24/7 central dispatch in Nuku'alofa; stations across Neiafu and Pangai" },
+    ambulance: { label: "Ambulance & Vaiola Central Hospital", phone: "933 / (+676) 23-200", notes: "Main national hospital & trauma center in Tongatapu" },
+    fire: { label: "Fire & Rescue Services", phone: "999" },
+    marineRescue: { label: "Maritime Search & Rescue / Coastguard", phone: "VHF Marine Ch 16 / (+676) 20-222", notes: "Monitors territorial waters and outer channels" },
+    outerHospitals: [
+      { name: "Prince Wellington Ngu Hospital (Neiafu, Vava'u)", phone: "(+676) 70-201" },
+      { name: "Niu'ui Hospital (Pangai, Ha'apai)", phone: "(+676) 60-224" },
+      { name: "Kaufana Health Clinic ('Ohonua, 'Eua)", phone: "(+676) 50-101" }
+    ],
+    currencyNotes: "Tongan Pa'anga ($T / TOP). ATMs in Nuku'alofa and Neiafu. Always carry cash for Ha'apai and 'Eua.",
+    electricity: "240V, 50Hz, Type I three-pin angled plug (same as Australia / New Zealand)."
+  },
+
+  interIslandLogistics: {
+    domesticAir: {
+      operator: "Lulutai Airlines",
+      routes: "Tongatapu (TBU) to Vava'u (VAV ~50m), Ha'apai (HPA ~35m), and 'Eua (EUA ~8m).",
+      baggage: "Strict 15 kg checked luggage allowance + 5 kg carry-on per passenger.",
+      sundayRule: "No domestic or commercial flights operate on Sundays."
+    },
+    ferries: {
+      operator: "Friendly Islands Shipping Agency (FISA) / MV 'Otuanga'ofa & MV Maggie Cat",
+      routes: "Nuku'alofa Queen Salote Wharf to 'Eua (daily 2hr), Ha'apai (8-10hr), and Vava'u (12-14hr).",
+      advice: "Schedules subject to Pacific swell conditions. Book at least 24h prior at Queen Salote Wharf."
+    },
+    localBoats: {
+      description: "Inter-island water taxis connect mainland Neiafu to outer Vava'u motus and Pangai to Uoleva/Foa in Ha'apai. Maritime law mandates wearing lifejackets."
+    }
+  },
+
+  sundayObservance: {
+    title: "Sāpate (Sunday Sacred Observance Law)",
+    constitutionalLaw: "The Constitution of Tonga declares the Sabbath sacred forever. All commercial business, retail, motorized watersports, and heavy labor are prohibited by national law.",
+    services: "Visitors are warmly welcomed to choral church services (Free Wesleyan, Catholic, Anglican, LDS) from 10:00 AM. Heavenly multi-part polyphonic singing.",
+    dressCode: "Modest dress required: shoulders and knees covered. Men wear long trousers or tupenu with ta'ovala (woven mat); women wear modest dresses or skirts below the knee.",
+    resorts: "Licensed tourist resort islands are permitted to serve registered guests; quiet swimming is allowed within resort waters."
+  },
+
   itineraryPresets: [
     {
       id: "classic-7day",
