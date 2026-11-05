@@ -731,19 +731,129 @@ function renderEssentials() {
     `).join('');
   }
 
-  // Written Pronunciation Phrasebook
+  // Interactive Faka-Tonga Phrasebook with Native Audio Playback
   if (phrasebookContainer) {
-    phrasebookContainer.innerHTML = TONGA_DATA.phrases.map(p => `
-      <div style="background:var(--bg-surface-solid); border:1px solid var(--glass-border); padding:0.9rem 1.1rem; border-radius:8px; box-shadow:var(--shadow-sm);">
-        <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:0.25rem;">
-          <span style="font-weight:800; color:var(--lagoon-turquoise); font-size:1.1rem;">"${p.tongan}"</span>
-          <span style="font-size:0.85rem; font-weight:600; color:var(--gold-warm);">${p.english}</span>
+    const announcer = document.getElementById('phrase-audio-announcer');
+    const modeSelect = document.getElementById('phrase-audio-mode');
+
+    if (modeSelect) {
+      modeSelect.value = soundEngine.playbackMode;
+      modeSelect.addEventListener('change', (e) => {
+        soundEngine.playbackMode = e.target.value;
+      });
+    }
+
+    const announce = (msg) => {
+      if (announcer) announcer.textContent = msg;
+    };
+
+    const resetPhraseUI = (idx) => {
+      const card = phrasebookContainer.querySelector(`.phrase-card[data-phrase-idx="${idx}"]`);
+      if (!card) return;
+      card.classList.remove('is-playing');
+      const btn = card.querySelector('.phrase-audio-btn');
+      if (btn) {
+        const iconSpan = btn.querySelector('.phrase-audio-icon');
+        const textSpan = btn.querySelector('.phrase-audio-label');
+        if (iconSpan) iconSpan.textContent = '🔊';
+        if (textSpan) textSpan.textContent = 'Listen';
+        btn.setAttribute('aria-label', `Listen to pronunciation of ${TONGA_DATA.phrases[idx].tongan}`);
+      }
+      card.querySelectorAll('.phrase-syl').forEach(s => s.classList.remove('is-active-syllable'));
+    };
+
+    const setPhrasePlayingUI = (idx, phrase) => {
+      const card = phrasebookContainer.querySelector(`.phrase-card[data-phrase-idx="${idx}"]`);
+      if (!card) return;
+      card.classList.add('is-playing');
+      const btn = card.querySelector('.phrase-audio-btn');
+      if (btn) {
+        const iconSpan = btn.querySelector('.phrase-audio-icon');
+        const textSpan = btn.querySelector('.phrase-audio-label');
+        if (iconSpan) iconSpan.textContent = '⏸️';
+        if (textSpan) textSpan.textContent = 'Stop';
+        btn.setAttribute('aria-label', `Stop pronunciation of ${phrase.tongan}`);
+      }
+      announce(`Playing pronunciation for ${phrase.tongan}`);
+    };
+
+    const highlightSyllableUI = (idx, sylIdx) => {
+      const container = document.getElementById(`phrase-syllables-${idx}`);
+      if (!container) return;
+      const allSyles = container.querySelectorAll('.phrase-syl');
+      allSyles.forEach((el, i) => {
+        el.classList.toggle('is-active-syllable', i === sylIdx);
+      });
+    };
+
+    phrasebookContainer.innerHTML = TONGA_DATA.phrases.map((p, idx) => {
+      const syls = p.syllables || [p.pronunciation];
+      const syllablesHtml = syls.map((s, sIdx) => `
+        <span class="phrase-syl" data-syl-idx="${sIdx}">${s}</span>
+      `).join('<span class="phrase-syl-sep">-</span>');
+
+      return `
+        <div class="phrase-card" data-phrase-idx="${idx}">
+          <div class="phrase-card-header">
+            <div class="phrase-titles">
+              <span class="phrase-tongan font-royal">"${p.tongan}"</span>
+              <span class="phrase-english">${p.english}</span>
+            </div>
+            <div class="phrase-actions">
+              <button type="button" class="phrase-audio-btn" data-phrase-idx="${idx}" aria-label="Listen to pronunciation of ${p.tongan}">
+                <span class="phrase-audio-icon" aria-hidden="true">🔊</span>
+                <span class="phrase-audio-label">Listen</span>
+                <span class="phrase-equalizer" aria-hidden="true">
+                  <span></span><span></span><span></span>
+                </span>
+              </button>
+            </div>
+          </div>
+          <div class="phrase-phonetics">
+            <span style="color:var(--text-dim); font-size:0.85rem;" aria-hidden="true">🗣️</span>
+            <span style="font-weight:600; font-size:0.82rem; color:var(--text-dim);">Pronounce:</span>
+            <div class="phrase-syllable-container" id="phrase-syllables-${idx}" aria-label="Phonetic syllables: ${p.pronunciation}">
+              ${syllablesHtml}
+            </div>
+          </div>
+          <div class="phrase-usage">
+            <span class="usage-badge">Usage</span>
+            <span>${p.usage}</span>
+          </div>
         </div>
-        <div style="color:var(--text-muted); font-size:0.85rem;">
-          🗣️ Pronounced: <em>"${p.pronunciation}"</em> • <span style="color:var(--text-dim);">${p.usage}</span>
-        </div>
-      </div>
-    `).join('');
+      `;
+    }).join('');
+
+    // Attach click events to each phrase audio button
+    phrasebookContainer.querySelectorAll('.phrase-audio-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const idx = parseInt(btn.dataset.phraseIdx, 10);
+        const phrase = TONGA_DATA.phrases[idx];
+        if (!phrase) return;
+
+        if (soundEngine.currentPlayingIdx === idx) {
+          soundEngine.stopPhraseAudio();
+          resetPhraseUI(idx);
+          announce('Playback stopped.');
+        } else {
+          const prev = soundEngine.currentPlayingIdx;
+          if (prev !== null) {
+            resetPhraseUI(prev);
+          }
+          setPhrasePlayingUI(idx, phrase);
+          soundEngine.playPhraseAudio(
+            phrase,
+            idx,
+            (sylIdx) => highlightSyllableUI(idx, sylIdx),
+            () => {
+              resetPhraseUI(idx);
+              announce(`Finished pronunciation for ${phrase.tongan}`);
+            }
+          );
+        }
+      });
+    });
   }
 
   if (visaContainer) {

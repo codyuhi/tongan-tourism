@@ -243,14 +243,105 @@ export const TONGA_DATA = {
   },
 
   phrases: [
-    { tongan: "Mālō e lelei", english: "Hello / Good day", usage: "Universal greeting", pronunciation: "mah-LOH eh leh-LEH-ee" },
-    { tongan: "Mālō 'aupito", english: "Thank you very much", usage: "Polite gratitude", pronunciation: "mah-LOH ow-PEE-toh" },
-    { tongan: "'Ofa atu", english: "With love / Warm regards", usage: "Farewell or sign-off", pronunciation: "oh-FAH ah-TOO" },
-    { tongan: "Fēfe hake?", english: "How are you?", usage: "Casual check-in", pronunciation: "FEH-feh HAH-keh" },
-    { tongan: "Sai pē", english: "I am fine / All good", usage: "Response to Fēfe hake", pronunciation: "SAY peh" },
-    { tongan: "Tāufaka'ofa", english: "Beautiful / Magnificent", usage: "Praising sights & music", pronunciation: "tow-fah-kah-OH-fah" },
-    { tongan: "Nofo ā", english: "Goodbye (to one staying)", usage: "Leaving someone", pronunciation: "NOH-foh ah" },
-    { tongan: "'Alu ā", english: "Goodbye (to one leaving)", usage: "Said by host to guest", pronunciation: "AH-loo ah" }
+    {
+      id: "malo-e-lelei",
+      tongan: "Mālō e lelei",
+      english: "Hello / Good day",
+      usage: "Universal greeting",
+      pronunciation: "mah-LOH eh leh-LEH-ee",
+      syllables: ["mah", "LOH", "eh", "leh", "LEH-ee"],
+      audioPhonetic: "Mah loh eh leh lay ee"
+    },
+    {
+      id: "malo-aupito",
+      tongan: "Mālō 'aupito",
+      english: "Thank you very much",
+      usage: "Polite gratitude",
+      pronunciation: "mah-LOH ow-PEE-toh",
+      syllables: ["mah", "LOH", "'ow", "PEE", "toh"],
+      audioPhonetic: "Mah loh ow pee toh"
+    },
+    {
+      id: "ofa-atu",
+      tongan: "'Ofa atu",
+      english: "With love / Warm regards",
+      usage: "Farewell or sign-off",
+      pronunciation: "oh-FAH ah-TOO",
+      syllables: ["'oh", "FAH", "ah", "TOO"],
+      audioPhonetic: "Oh fah ah too"
+    },
+    {
+      id: "fefe-hake",
+      tongan: "Fēfe hake?",
+      english: "How are you?",
+      usage: "Casual check-in",
+      pronunciation: "FEH-feh HAH-keh",
+      syllables: ["FEH", "feh", "HAH", "keh"],
+      audioPhonetic: "Feh feh hah keh"
+    },
+    {
+      id: "sai-pe",
+      tongan: "Sai pē",
+      english: "I am fine / All good",
+      usage: "Response to Fēfe hake",
+      pronunciation: "SAY peh",
+      syllables: ["SAY", "peh"],
+      audioPhonetic: "Sigh peh"
+    },
+    {
+      id: "taufakaofa",
+      tongan: "Tāufaka'ofa",
+      english: "Beautiful / Magnificent",
+      usage: "Praising sights & music",
+      pronunciation: "tow-fah-kah-OH-fah",
+      syllables: ["tow", "fah", "kah", "'OH", "fah"],
+      audioPhonetic: "Tow fah kah oh fah"
+    },
+    {
+      id: "nofo-a",
+      tongan: "Nofo ā",
+      english: "Goodbye (to one staying)",
+      usage: "Leaving someone",
+      pronunciation: "NOH-foh ah",
+      syllables: ["NOH", "foh", "ah"],
+      audioPhonetic: "Noh foh ah"
+    },
+    {
+      id: "alu-a",
+      tongan: "'Alu ā",
+      english: "Goodbye (to one leaving)",
+      usage: "Said by host to guest",
+      pronunciation: "AH-loo ah",
+      syllables: ["'AH", "loo", "ah"],
+      audioPhonetic: "Ah loo ah"
+    },
+    {
+      id: "fakaapaapa",
+      tongan: "Faka'apa'apa",
+      english: "Respect / Mutual deference",
+      usage: "Core cultural value & pillar of Tongan life",
+      pronunciation: "fah-kah-ah-PAH-ah-pah",
+      syllables: ["fah", "kah", "'ah", "PAH", "ah", "pah"],
+      audioPhonetic: "Fah kah ah pah ah pah"
+    },
+    {
+      id: "io",
+      tongan: "'Io",
+      english: "Yes",
+      usage: "Polite affirmation and agreement",
+      pronunciation: "EE-oh",
+      syllables: ["'EE", "oh"],
+      audioPhonetic: "Ee oh"
+    },
+    {
+      id: "ikai",
+      tongan: "'Ikai",
+      english: "No",
+      usage: "Polite decline or negative",
+      pronunciation: "ee-KIGH",
+      syllables: ["'ee", "KIGH"],
+      audioPhonetic: "Ee kigh"
+    }
   ],
 
   currency: {

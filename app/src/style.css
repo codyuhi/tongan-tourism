@@ -1435,3 +1435,186 @@ dialog {
     justify-content: space-between;
   }
 }
+
+/* ==========================================================================
+   Interactive Faka-Tonga Phrasebook & Audio Pronunciation
+   ========================================================================== */
+
+.phrase-card {
+  position: relative;
+  background: var(--bg-surface-solid);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: 1.1rem 1.25rem;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.phrase-card:hover {
+  border-color: var(--glass-border-hover);
+}
+
+.phrase-card.is-playing {
+  border-color: var(--lagoon-turquoise);
+  box-shadow: 0 0 0 2px var(--lagoon-glow), var(--shadow-lg);
+  background: linear-gradient(135deg, var(--bg-surface-solid) 0%, rgba(143, 193, 222, 0.09) 100%);
+}
+
+.phrase-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.phrase-titles {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.phrase-tongan {
+  font-weight: 800;
+  color: var(--lagoon-turquoise);
+  font-size: 1.2rem;
+  letter-spacing: -0.01em;
+}
+
+.phrase-english {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--gold-warm);
+}
+
+.phrase-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.phrase-audio-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 44px;
+  padding: 0.45rem 1rem;
+  border-radius: var(--radius-full);
+  background: rgba(35, 92, 72, 0.35); /* Cedar Spruce tint */
+  color: var(--text-main);
+  border: 1px solid rgba(143, 193, 222, 0.4);
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  touch-action: manipulation;
+}
+
+.phrase-audio-btn:hover {
+  background: var(--cta);
+  color: #ffffff;
+  border-color: var(--lagoon-turquoise);
+  transform: translateY(-1px);
+}
+
+.phrase-card.is-playing .phrase-audio-btn {
+  background: var(--primary-royal);
+  border-color: var(--primary-royal);
+  color: #ffffff;
+}
+
+/* Equalizer Dancing Waveform */
+.phrase-equalizer {
+  display: none;
+  align-items: flex-end;
+  gap: 2px;
+  height: 14px;
+  width: 14px;
+}
+
+.phrase-card.is-playing .phrase-equalizer {
+  display: inline-flex;
+}
+
+.phrase-equalizer span {
+  display: block;
+  width: 2.5px;
+  background: currentColor;
+  border-radius: 1px;
+  animation: eqBounce 0.8s ease-in-out infinite alternate;
+}
+
+.phrase-equalizer span:nth-child(1) { height: 40%; animation-delay: 0s; }
+.phrase-equalizer span:nth-child(2) { height: 100%; animation-delay: 0.2s; }
+.phrase-equalizer span:nth-child(3) { height: 60%; animation-delay: 0.4s; }
+
+@keyframes eqBounce {
+  0% { height: 20%; }
+  100% { height: 100%; }
+}
+
+.phrase-phonetics {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  font-size: 0.88rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-muted);
+}
+
+.phrase-syllable-container {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.2rem;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 0.25rem 0.55rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--glass-border);
+}
+
+.phrase-syl {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.85rem;
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+  color: var(--text-muted);
+  transition: all 0.15s ease;
+}
+
+.phrase-syl.is-active-syllable {
+  background: var(--lagoon-turquoise);
+  color: #0b1a24;
+  font-weight: 800;
+  transform: scale(1.12);
+  box-shadow: 0 0 10px var(--lagoon-glow);
+}
+
+.phrase-syl-sep {
+  color: var(--text-dim);
+  font-size: 0.75rem;
+  user-select: none;
+}
+
+.phrase-usage {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  color: var(--text-dim);
+}
+
+.phrase-usage .usage-badge {
+  text-transform: uppercase;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  padding: 0.1rem 0.4rem;
+  background: rgba(224, 169, 46, 0.15);
+  color: var(--gold-warm);
+  border-radius: var(--radius-sm);
+}

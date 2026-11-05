@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import online.codyuhi.tongantourism.audio.TonganPhraseAudioEngine
 import online.codyuhi.tongantourism.data.repository.CurrencyRepository
 import online.codyuhi.tongantourism.data.repository.TongaDataRepository
 import online.codyuhi.tongantourism.domain.BudgetTier
@@ -21,12 +22,16 @@ data class EssentialsUiState(
     val budgetTiers: List<BudgetTier> = emptyList(),
     val visaInfo: List<VisaInfo> = emptyList(),
     val phrases: List<Phrase> = emptyList(),
-    val emergencyContacts: List<Triple<String, String, String>> = emptyList()
+    val emergencyContacts: List<Triple<String, String, String>> = emptyList(),
+    val playingPhraseTongan: String? = null,
+    val activeSyllableIndex: Int = -1,
+    val isPlayingAudio: Boolean = false
 )
 
 class EssentialsViewModel(
     private val dataRepo: TongaDataRepository,
-    private val currencyRepo: CurrencyRepository
+    private val currencyRepo: CurrencyRepository,
+    private val phraseAudioEngine: TonganPhraseAudioEngine
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -42,12 +47,35 @@ class EssentialsViewModel(
 
     init {
         observeCurrency()
+        observeAudio()
     }
 
     private fun observeCurrency() {
         currencyRepo.getRates().onEach { ratesMap ->
             _uiState.value = _uiState.value.copy(rates = ratesMap)
         }.launchIn(viewModelScope)
+    }
+
+    private fun observeAudio() {
+        phraseAudioEngine.playbackState.onEach { playback ->
+            _uiState.value = _uiState.value.copy(
+                playingPhraseTongan = playback.playingTongan,
+                activeSyllableIndex = playback.activeSyllableIndex,
+                isPlayingAudio = playback.isPlaying
+            )
+        }.launchIn(viewModelScope)
+    }
+
+    fun playPhrase(phrase: Phrase) {
+        phraseAudioEngine.playPhrase(phrase)
+    }
+
+    fun stopAudio() {
+        phraseAudioEngine.stopAudio()
+    }
+
+    override fun onCleared() {
+        phraseAudioEngine.stopAudio()
     }
 
     fun setAmountInput(input: String) {

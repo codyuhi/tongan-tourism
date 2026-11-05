@@ -29,10 +29,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -161,8 +163,12 @@ fun EssentialsScreen(
         }
 
         items(state.phrases, key = { it.tongan }) { phrase ->
+            val isPlaying = state.isPlayingAudio && state.playingPhraseTongan == phrase.tongan
             PhraseCard(
                 phrase = phrase,
+                isPlaying = isPlaying,
+                activeSyllableIndex = if (isPlaying) state.activeSyllableIndex else -1,
+                onPlayAudio = { viewModel.playPhrase(phrase) },
                 onShare = { sharePhrase(context, phrase) }
             )
         }
@@ -471,12 +477,24 @@ private fun VisaInfoCard(visaList: List<online.codyuhi.tongantourism.domain.Visa
 @Composable
 private fun PhraseCard(
     phrase: Phrase,
+    isPlaying: Boolean = false,
+    activeSyllableIndex: Int = -1,
+    onPlayAudio: () -> Unit,
     onShare: () -> Unit
 ) {
+    val syllables = remember(phrase.pronunciation) {
+        phrase.pronunciation.split(Regex("[ -]+")).filter { it.isNotBlank() }
+    }
+
     OutlinedCard(
         shape = CedarShapes.small,
-        colors = CardDefaults.outlinedCardColors(containerColor = Cedar.colors.surface),
-        border = BorderStroke(1.dp, Cedar.colors.borderSubtle),
+        colors = CardDefaults.outlinedCardColors(
+            containerColor = if (isPlaying) Cedar.colors.inset else Cedar.colors.surface
+        ),
+        border = BorderStroke(
+            if (isPlaying) 2.dp else 1.dp,
+            if (isPlaying) Cedar.colors.brand else Cedar.colors.borderSubtle
+        ),
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(
@@ -486,13 +504,35 @@ private fun PhraseCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = phrase.tongan,
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.Bold,
-                        color = Cedar.colors.brand
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    Text(
+                        text = phrase.tongan,
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = Cedar.colors.brand
+                        )
                     )
-                )
+                    if (isPlaying) {
+                        Surface(
+                            shape = RoundedCornerShape(4.dp),
+                            color = CedarPalette.Rust.copy(alpha = 0.2f),
+                            border = BorderStroke(1.dp, CedarPalette.Rust)
+                        ) {
+                            Text(
+                                text = "PLAYING",
+                                style = CedarMonoStyle.copy(
+                                    fontSize = 10.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = CedarPalette.Rust
+                                ),
+                                modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp)
+                            )
+                        }
+                    }
+                }
                 Text(
                     text = phrase.english,
                     style = MaterialTheme.typography.bodyMedium.copy(
@@ -500,13 +540,41 @@ private fun PhraseCard(
                         color = Cedar.colors.textEmphasis
                     )
                 )
-                Spacer(modifier = Modifier.height(2.dp))
-                Text(
-                    text = "Pronounce: [ ${phrase.pronunciation} ]",
-                    style = CedarMonoStyle.copy(
-                        color = CedarPalette.Rust
+                Spacer(modifier = Modifier.height(4.dp))
+
+                // Interactive Syllables
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(3.dp),
+                    modifier = Modifier.padding(vertical = 2.dp)
+                ) {
+                    Text(
+                        text = "Pronounce:",
+                        style = MaterialTheme.typography.bodySmall.copy(
+                            fontSize = 11.sp,
+                            color = Cedar.colors.textMuted
+                        )
                     )
-                )
+                    syllables.forEachIndexed { sIdx, syl ->
+                        val isSylActive = isPlaying && activeSyllableIndex == sIdx
+                        Surface(
+                            shape = RoundedCornerShape(3.dp),
+                            color = if (isSylActive) Cedar.colors.brand else Cedar.colors.inset,
+                            contentColor = if (isSylActive) Color.White else CedarPalette.Rust
+                        ) {
+                            Text(
+                                text = syl,
+                                style = CedarMonoStyle.copy(
+                                    fontSize = 11.sp,
+                                    fontWeight = if (isSylActive) FontWeight.Bold else FontWeight.Medium
+                                ),
+                                modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp)
+                            )
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = "Usage: ${phrase.usage}",
                     style = MaterialTheme.typography.bodySmall.copy(
@@ -515,14 +583,36 @@ private fun PhraseCard(
                 )
             }
 
-            Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(6.dp))
-                    .background(Cedar.colors.inset)
-                    .clickable { onShare() }
-                    .padding(8.dp)
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                Text(text = "📤", fontSize = 16.sp)
+                // Audio Listen / Stop Button
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(6.dp))
+                        .background(if (isPlaying) CedarPalette.Rust else Cedar.colors.inset)
+                        .clickable { onPlayAudio() }
+                        .padding(8.dp)
+                ) {
+                    Text(
+                        text = if (isPlaying) "⏸️" else "🔊",
+                        fontSize = 16.sp
+                    )
+                }
+
+                // Share Button
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(6.dp))
+                        .background(Cedar.colors.inset)
+                        .clickable { onShare() }
+                        .padding(8.dp)
+                ) {
+                    Text(text = "📤", fontSize = 16.sp)
+                }
             }
         }
     }

@@ -74,7 +74,11 @@ fun TonganTourismApp(
     val whalesViewModel = remember { WhalesViewModel(container.tongaDataRepository, container.soundEngine) }
     val plannerViewModel = remember { PlannerViewModel(container.itineraryRepository) }
     val essentialsViewModel = remember {
-        EssentialsViewModel(container.tongaDataRepository, container.currencyRepository)
+        EssentialsViewModel(
+            container.tongaDataRepository,
+            container.currencyRepository,
+            container.phraseAudioEngine
+        )
     }
 
     val plannerUiState by plannerViewModel.uiState.collectAsState()

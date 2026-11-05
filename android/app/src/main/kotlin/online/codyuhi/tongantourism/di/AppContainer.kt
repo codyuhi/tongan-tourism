@@ -4,6 +4,7 @@ import android.content.Context
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
+import online.codyuhi.tongantourism.audio.TonganPhraseAudioEngine
 import online.codyuhi.tongantourism.audio.WhaleSoundEngine
 import online.codyuhi.tongantourism.data.api.CurrencyApi
 import online.codyuhi.tongantourism.data.api.WeatherApi
@@ -24,6 +25,7 @@ interface AppContainer {
     val weatherRepository: WeatherRepository
     val currencyRepository: CurrencyRepository
     val soundEngine: WhaleSoundEngine
+    val phraseAudioEngine: TonganPhraseAudioEngine
 }
 
 class DefaultAppContainer(private val context: Context) : AppContainer {
@@ -91,5 +93,9 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
 
     override val soundEngine: WhaleSoundEngine by lazy {
         WhaleSoundEngine()
+    }
+
+    override val phraseAudioEngine: TonganPhraseAudioEngine by lazy {
+        TonganPhraseAudioEngine(context)
     }
 }

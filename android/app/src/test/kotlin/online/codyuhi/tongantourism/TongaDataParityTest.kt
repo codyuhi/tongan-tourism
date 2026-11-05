@@ -58,8 +58,8 @@ class TongaDataParityTest {
     }
 
     @Test
-    fun `phrasebook contains 8 phrases with pronunciations`() {
-        assertEquals(8, repo.phrases.size)
+    fun `phrasebook contains 11 phrases with pronunciations`() {
+        assertEquals(11, repo.phrases.size)
         assertEquals("Mālō e lelei", repo.phrases[0].tongan)
         assertEquals("mah-LOH eh leh-LEH-ee", repo.phrases[0].pronunciation)
     }

@@ -329,6 +329,24 @@ class TongaDataRepository(private val context: Context? = null) {
             english = "Goodbye (to one leaving)",
             usage = "Said by host to guest",
             pronunciation = "AH-loo ah"
+        ),
+        Phrase(
+            tongan = "Faka'apa'apa",
+            english = "Respect / Mutual deference",
+            usage = "Core cultural value & pillar of Tongan life",
+            pronunciation = "fah-kah-ah-PAH-ah-pah"
+        ),
+        Phrase(
+            tongan = "'Io",
+            english = "Yes",
+            usage = "Polite affirmation and agreement",
+            pronunciation = "EE-oh"
+        ),
+        Phrase(
+            tongan = "'Ikai",
+            english = "No",
+            usage = "Polite decline or negative",
+            pronunciation = "ee-KIGH"
         )
     )
 
