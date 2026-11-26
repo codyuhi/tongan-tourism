@@ -12,12 +12,12 @@ val appVersionCode = appVersionName.substringBefore('-').split('.').map { it.toI
 
 android {
     namespace = "online.codyuhi.tongantourism"
-    compileSdk = 37
+    compileSdk = 38
 
     defaultConfig {
         applicationId = "online.codyuhi.tongantourism"
         minSdk = 33
-        targetSdk = 37
+        targetSdk = 38
         versionName = appVersionName
         versionCode = appVersionCode
         buildConfigField("String", "API_BASE_URL", "\"${property("homelab.apiBaseUrl")}\"")
